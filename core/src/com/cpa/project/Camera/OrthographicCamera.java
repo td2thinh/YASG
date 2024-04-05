@@ -1,7 +1,7 @@
-package com.cpa.project.camera;
+package com.cpa.project.Camera;
 
 import com.badlogic.gdx.math.Vector3;
-import com.cpa.project.entities.Entity;
+import com.cpa.project.Entities.Entity;
 
 public class OrthographicCamera extends com.badlogic.gdx.graphics.OrthographicCamera {
     Entity target;
