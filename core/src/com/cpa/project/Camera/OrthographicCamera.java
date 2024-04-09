@@ -13,9 +13,9 @@ public class OrthographicCamera extends com.badlogic.gdx.graphics.OrthographicCa
 
     public void update(float dt) {
         if (target != null) {
-            Vector3 position = this.position;
-            position.x += (target.getPosition().x - position.x + target.getSprite().getWidth() / 2) * lerp;
-            position.y += (target.getPosition().y - position.y) * lerp;
+            Vector3 pos = this.position;
+            pos.x += (target.getSprite().getX() - pos.x + target.getSprite().getWidth() / 2) * lerp;
+            pos.y += (target.getSprite().getY() - pos.y) * lerp;
             this.position.set(position); // Update the camera position
         }
         super.update();

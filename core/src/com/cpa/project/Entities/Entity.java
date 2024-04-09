@@ -4,23 +4,36 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 
 public abstract class Entity {
-    protected Vector2 position;
+
+    final protected Sprite sprite;
+    protected Vector2 center;
     protected Vector2 direction;
-    protected Sprite sprite;
     protected float health;
     protected Vector2 velocity;
     protected int speed;
     protected float damage;
 
+    protected EntityType entityType;
+
     public Entity(Vector2 position, Sprite sprite) {
-        this.position = position;
         this.sprite = sprite;
+        this.sprite.setPosition(position.x, position.y);
+        this.center = new Vector2(position.x + sprite.getWidth() / 2, position.y + sprite.getHeight() / 2);
+    }
+
+    // Constructor for Projectiles
+    public Entity(Vector2 position, Sprite sprite, Vector2 direction, float speed, float damage) {
+        this.sprite = sprite;
+        this.sprite.setPosition(position.x, position.y);
+        this.direction = direction;
+        this.speed = (int) speed;
+        this.damage = damage;
     }
 
 
     public Entity(Vector2 position, Sprite sprite, int speed, float health, float damage) {
-        this.position = position;
         this.sprite = sprite;
+        this.sprite.setPosition(position.x, position.y);
         this.speed = speed;
         this.health = health;
         this.damage = damage;
@@ -35,11 +48,11 @@ public abstract class Entity {
     public abstract void collidesWith(Entity other);
 
     public Vector2 getPosition() {
-        return position;
+        return new Vector2(sprite.getX() + sprite.getWidth() / 2, sprite.getY() + sprite.getHeight() / 2);
     }
 
     public void setPosition(Vector2 position) {
-        this.position = position;
+        this.sprite.setPosition(position.x, position.y);
     }
 
     public float getHealth() {
@@ -80,7 +93,15 @@ public abstract class Entity {
 
     public abstract Entity clone();
 
-    protected enum EntityType {
+    public EntityType getEntityType() {
+        return this.entityType;
+    }
+
+    public Vector2 getCenter() {
+        return center;
+    }
+
+    public enum EntityType {
         ENEMY,
         PROJECTILE_EN,
         PROJECTILE_PL,
