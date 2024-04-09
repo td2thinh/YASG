@@ -1,43 +1,90 @@
 package com.cpa.project.World;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.cpa.project.Camera.OrthographicCamera;
 import com.cpa.project.Entities.Actors.Player;
 import com.cpa.project.Entities.Entity;
+import com.cpa.project.Entities.Projectiles.Fire;
 import com.cpa.project.Utils.CollisionDetector;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class World {
     protected Player player;
-    protected List<Entity> entities;
+    protected Set<Entity> entities;
     protected OrthographicCamera camera;
 
-    public World(Player player, List<Entity> entities, OrthographicCamera camera) {
+    float fireRate = 0.1f;
+
+    public World(Player player, Set<Entity> entities, OrthographicCamera camera) {
         this.player = player;
         this.entities = entities;
         this.camera = camera;
-        this.camera.setTarget(player);
     }
 
     public void update(float dt) {
-        for (Entity entity : entities) {
-            for (Entity other : entities) {
-                if (entity != other) {
-                    if (CollisionDetector.checkCollision(entity, other)) {
-                        entity.collidesWith(other);
+
+
+        camera.update(dt);
+        // Fire rate for Fire projectiles
+        // TODO: DELEGATE THIS TO THE PLAYER CLASS OR SOMETHING
+        fireRate -= dt;
+        if (fireRate <= 0) {
+            Vector3 cursorPos3D = camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
+            Vector2 cursorPos = new Vector2(cursorPos3D.x, cursorPos3D.y);
+            Vector2 playerPos = this.player.getPosition();
+            Vector2 bulletDir = cursorPos.sub(playerPos).nor();
+//        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+//            System.out.println("Player pos: " + player.getPosition());
+//            System.out.println("Cursor pos: " + new Vector2(Gdx.input.getX(), Gdx.input.getY()));
+//            System.out.println("Bullet direction: " + bulletDir);
+            entities.add(new Fire(this.player.getPosition(), new Sprite(new Texture("firebullet.png")), bulletDir, 200, 10));
+//        }
+            fireRate += 0.1f;
+        }
+        player.update(dt);
+        List<Entity> entitiesCopy = new ArrayList<>(entities);
+        List<Entity> toRemove = new ArrayList<>();
+        for (int i = 0; i < entitiesCopy.size(); i++) {
+            Entity entity = entitiesCopy.get(i);
+            entity.update(dt);
+            for (int j = i + 1; j < entitiesCopy.size(); j++) {
+                Entity other = entitiesCopy.get(j);
+                if (CollisionDetector.checkCollision(entity, other)) {
+                    entity.collidesWith(other);
+                    if (entity.getHealth() <= 0) {
+                        toRemove.add(entity);
+                    }
+                    if (other.getHealth() <= 0) {
+                        toRemove.add(other);
                     }
                 }
             }
-            entity.update(dt);
+            // Remove projectiles that are too far out
+            if (entitiesCopy.get(i).getEntityType() == Entity.EntityType.PROJECTILE_PL) {
+                if (entitiesCopy.get(i).getPosition().dst(player.getPosition()) > 5000) {
+                    toRemove.add(entitiesCopy.get(i));
+                }
+            }
         }
-        player.update(dt);
+        // Dispose of entities that are dead
+        for (Entity entity : toRemove) {
+            entity.dispose();
+            entities.remove(entity);
+        }
     }
 
     public void dispose() {
-        player.dispose();
         for (Entity entity : entities) {
-            entity.dispose();
+            entity.getSprite().getTexture().dispose();
         }
+        entities.clear();
     }
 
     public Player getPlayer() {
@@ -48,11 +95,11 @@ public class World {
         this.player = player;
     }
 
-    public List<Entity> getEntities() {
+    public Set<Entity> getEntities() {
         return entities;
     }
 
-    public void setEntities(List<Entity> entities) {
+    public void setEntities(Set<Entity> entities) {
         this.entities = entities;
     }
 
@@ -63,5 +110,6 @@ public class World {
     public void setCamera(OrthographicCamera camera) {
         this.camera = camera;
     }
+
 
 }

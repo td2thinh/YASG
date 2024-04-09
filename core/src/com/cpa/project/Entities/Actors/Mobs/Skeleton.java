@@ -6,10 +6,10 @@ import com.cpa.project.Entities.Entity;
 
 public class Skeleton extends Entity {
 
-    EntityType entityType = EntityType.ENEMY;
 
     public Skeleton(Vector2 position, Sprite sprite, int speed, float health, float damage) {
         super(position, sprite, speed, health, damage);
+        this.entityType = EntityType.ENEMY;
     }
 
     public Skeleton(Vector2 position, Sprite sprite) {
@@ -26,14 +26,16 @@ public class Skeleton extends Entity {
 
     @Override
     public void collidesWith(Entity other) {
-        this.health -= other.getDamage();
-        if (this.health <= 0) {
-            this.dispose();
+        if (other.getEntityType() == EntityType.PLAYER) {
+            other.setHealth(other.getHealth() - this.getDamage());
+        }
+        if (other.getEntityType() == EntityType.PROJECTILE_PL) {
+            this.health -= other.getDamage();
         }
     }
 
     @Override
     public Entity clone() {
-        return new Skeleton(this.position, this.sprite, this.speed, this.health, this.damage);
+        return new Skeleton(new Vector2(this.getSprite().getX(), this.getSprite().getY()), this.sprite, this.speed, this.health, this.damage);
     }
 }
