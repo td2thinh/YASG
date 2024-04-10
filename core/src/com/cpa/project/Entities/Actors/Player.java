@@ -17,35 +17,36 @@ public class Player extends Entity {
     }
 
     public void move(float dt) {
+        float speedf = 1.758f; // 0.70710678118f
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.Q)) {
             if (Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.Z))
-                this.sprite.translate(-this.speed * dt * 0.70710678118f, this.speed * dt * 0.70710678118f);
+                this.sprite.translate(-this.speed * dt * speedf, this.speed * dt * speedf);
             else if (Gdx.input.isKeyPressed(Input.Keys.DOWN) || Gdx.input.isKeyPressed(Input.Keys.S))
-                this.sprite.translate(-this.speed * dt * 0.70710678118f, -this.speed * dt * 0.70710678118f);
+                this.sprite.translate(-this.speed * dt * speedf, -this.speed * dt * speedf);
             else
                 this.sprite.translate(-this.speed * dt, 0);
         }
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D)) {
             if (Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.Z))
-                this.sprite.translate(this.speed * dt * 0.70710678118f, this.speed * dt * 0.70710678118f);
+                this.sprite.translate(this.speed * dt * speedf, this.speed * dt * speedf);
             else if (Gdx.input.isKeyPressed(Input.Keys.DOWN) || Gdx.input.isKeyPressed(Input.Keys.S))
-                this.sprite.translate(this.speed * dt * 0.70710678118f, -this.speed * dt * 0.70710678118f);
+                this.sprite.translate(this.speed * dt * speedf, -this.speed * dt * speedf);
             else
                 this.sprite.translate(this.speed * dt, 0);
         }
         if (Gdx.input.isKeyPressed(Input.Keys.DOWN) || Gdx.input.isKeyPressed(Input.Keys.S)) {
             if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.Q))
-                this.sprite.translate(-this.speed * dt * 0.70710678118f, -this.speed * dt * 0.70710678118f);
+                this.sprite.translate(-this.speed * dt * speedf, -this.speed * dt * speedf);
             else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D))
-                this.sprite.translate(this.speed * dt * 0.70710678118f, -this.speed * dt * 0.70710678118f);
+                this.sprite.translate(this.speed * dt * speedf, -this.speed * dt * speedf);
             else
                 this.sprite.translate(0, -this.speed * dt);
         }
         if (Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.Z)) {
             if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.Q))
-                this.sprite.translate(-this.speed * dt * 0.70710678118f, this.speed * dt * 0.70710678118f);
+                this.sprite.translate(-this.speed * dt * speedf, this.speed * dt * speedf);
             else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D))
-                this.sprite.translate(this.speed * dt * 0.70710678118f, this.speed * dt * 0.70710678118f);
+                this.sprite.translate(this.speed * dt * speedf, this.speed * dt * speedf);
             else
                 this.sprite.translate(0, this.speed * dt);
         }

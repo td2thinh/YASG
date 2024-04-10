@@ -10,7 +10,7 @@ public abstract class Entity {
     protected Vector2 direction;
     protected float health;
     protected Vector2 velocity;
-    protected int speed;
+    protected float speed;
     protected float damage;
 
     protected EntityType entityType;
@@ -31,7 +31,7 @@ public abstract class Entity {
     }
 
 
-    public Entity(Vector2 position, Sprite sprite, int speed, float health, float damage) {
+    public Entity(Vector2 position, Sprite sprite, float speed, float health, float damage) {
         this.sprite = sprite;
         this.sprite.setPosition(position.x, position.y);
         this.speed = speed;
@@ -71,7 +71,7 @@ public abstract class Entity {
         this.velocity = velocity;
     }
 
-    public int getSpeed() {
+    public float getSpeed() {
         return speed;
     }
 

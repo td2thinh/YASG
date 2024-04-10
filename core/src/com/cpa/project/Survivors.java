@@ -2,15 +2,18 @@ package com.cpa.project;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.cpa.project.Camera.OrthographicCamera;
 import com.cpa.project.Entities.Actors.Mobs.Skeleton;
 import com.cpa.project.Entities.Actors.Player;
 import com.cpa.project.Entities.Entity;
+import com.cpa.project.World.MapManager;
 import com.cpa.project.World.World;
 
 import java.util.HashSet;
@@ -19,6 +22,9 @@ import java.util.Set;
 public class Survivors extends Game {
     SpriteBatch batch;
     World world;
+    MapManager mapManager;
+    ShapeRenderer shapeRenderer;
+    OrthographicCamera camera;
 
     @Override
     public void create() {
@@ -30,16 +36,22 @@ public class Survivors extends Game {
         entities.add(player);
         Entity ske1 = new Skeleton(new Vector2(900, 500), new Sprite(new Texture("threeformsPrev.png")));
         entities.add(ske1);
-        OrthographicCamera camera = new OrthographicCamera();
+        camera = new OrthographicCamera();
         camera.setTarget(player);
-        camera.setToOrtho(false, 1600, 960);
-        world = new World(player, entities, camera);
+        camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        mapManager = new MapManager(camera ,1);
+        world = new World(player, entities, camera );
+        shapeRenderer = new ShapeRenderer();
     }
 
     @Override
     public void render() {
-
         ScreenUtils.clear(0, 1, 0, 0.2f);
+        this.camera.update(Gdx.graphics.getDeltaTime());
+
+        mapManager.update(Gdx.graphics.getDeltaTime(),batch, shapeRenderer, world.getPlayer().getPosition());
+
+
         batch.setProjectionMatrix(this.world.getCamera().combined);
         batch.begin();
         world.update(Gdx.graphics.getDeltaTime());
@@ -48,6 +60,8 @@ public class Survivors extends Game {
             entity.getSprite().draw(batch);
         }
         batch.end();
+
+
     }
 
     @Override

@@ -7,7 +7,7 @@ import com.cpa.project.Entities.Entity;
 public class Skeleton extends Entity {
 
 
-    public Skeleton(Vector2 position, Sprite sprite, int speed, float health, float damage) {
+    public Skeleton(Vector2 position, Sprite sprite, float speed, float health, float damage) {
         super(position, sprite, speed, health, damage);
         this.entityType = EntityType.ENEMY;
     }

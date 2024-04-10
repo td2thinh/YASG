@@ -1,8 +1,11 @@
 package com.cpa.project.World;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.cpa.project.Camera.OrthographicCamera;
@@ -29,10 +32,7 @@ public class World {
     }
 
     public void update(float dt) {
-
-
-        camera.update(dt);
-        // Fire rate for Fire projectiles
+//        camera.update(dt);
         // TODO: DELEGATE THIS TO THE PLAYER CLASS OR SOMETHING
         fireRate -= dt;
         if (fireRate <= 0) {
@@ -40,10 +40,6 @@ public class World {
             Vector2 cursorPos = new Vector2(cursorPos3D.x, cursorPos3D.y);
             Vector2 playerPos = this.player.getPosition();
             Vector2 bulletDir = cursorPos.sub(playerPos).nor();
-//        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
-//            System.out.println("Player pos: " + player.getPosition());
-//            System.out.println("Cursor pos: " + new Vector2(Gdx.input.getX(), Gdx.input.getY()));
-//            System.out.println("Bullet direction: " + bulletDir);
             entities.add(new Fire(this.player.getPosition(), new Sprite(new Texture("firebullet.png")), bulletDir, 200, 10));
 //        }
             fireRate += 0.1f;
@@ -79,7 +75,6 @@ public class World {
             entities.remove(entity);
         }
     }
-
     public void dispose() {
         for (Entity entity : entities) {
             entity.getSprite().getTexture().dispose();
