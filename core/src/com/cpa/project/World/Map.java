@@ -1,13 +1,10 @@
 package com.cpa.project.World;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
-import com.cpa.project.Camera.OrthographicCamera;
+import com.cpa.project.Camera.TopDownCamera;
 
 public class Map {
 
@@ -34,7 +31,7 @@ public class Map {
         this.position = position;
     }
 
-    public void render(ShapeRenderer shapeRenderer , OrthographicCamera camera) {
+    public void render(ShapeRenderer shapeRenderer , TopDownCamera camera) {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(color);
 
@@ -52,7 +49,7 @@ public class Map {
         shapeRenderer.end();
     }
 
-    public void update(float dt , ShapeRenderer shapeRenderer  , OrthographicCamera camera) {
+    public void update(float dt , ShapeRenderer shapeRenderer  , TopDownCamera camera) {
         render(shapeRenderer , camera);
     }
 

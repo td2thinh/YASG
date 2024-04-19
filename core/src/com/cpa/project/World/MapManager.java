@@ -1,14 +1,11 @@
 package com.cpa.project.World;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
-import com.cpa.project.Camera.OrthographicCamera;
-import com.sun.tools.javac.util.Pair;
+import com.cpa.project.Camera.TopDownCamera;
 
 import java.util.HashMap;
 import java.util.ArrayList;
@@ -27,12 +24,12 @@ public class MapManager {
     int renderDistance;
     Vector2 playerMapPos;
     HashMap<Vector2, Map> maps;
-    OrthographicCamera camera;
+    TopDownCamera camera;
     BitmapFont font;
 
     Map currentMap;
 
-    public MapManager(OrthographicCamera camera, int renderDistance) {
+    public MapManager(TopDownCamera camera, int renderDistance) {
         this.camera = camera;
         this.renderDistance = renderDistance;
         this.playerMapPos = new Vector2(0, 0);
