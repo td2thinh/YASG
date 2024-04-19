@@ -22,8 +22,15 @@ public class Tile extends StaticTiledMapTile {
         this.id = id ;
         this.textureRegion = textureRegion ;
         this.properties = new MapProperties();
-        this.isReacheable = false ;
+        this.isReacheable = true ;
+    }
 
+    public Tile(int id , TextureRegion textureRegion , Boolean isReacheable) {
+        super(textureRegion);
+        this.id = id ;
+        this.textureRegion = textureRegion ;
+        this.properties = new MapProperties();
+        this.isReacheable = isReacheable ;
     }
 
     public void setPosition(Vector2 position) {

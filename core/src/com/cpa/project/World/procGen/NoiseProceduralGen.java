@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.cpa.project.Tiles.TileType;
 import com.cpa.project.Tiles.terrainFloorTiles;
 import com.cpa.project.Utils.PerlinNoiseGenerator;
+import com.cpa.project.Utils.SimplexNoise;
 
 public class NoiseProceduralGen {
     private final int scale; // Scale of the noise map , octave count
@@ -36,7 +37,7 @@ public class NoiseProceduralGen {
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 map[x][y] = chooseTileBasedOnNoise(noiseMap[x][y]);
-//
+
 //                double noiseValue = SimplexNoise.noise( scale * x / (double) width, scale * y / (double) height);
 //                // Normalize the value to be between 0 and 1
 //                double normalizedValue = (noiseValue + 1) / 2;
