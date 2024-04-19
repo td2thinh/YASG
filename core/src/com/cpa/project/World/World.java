@@ -34,6 +34,7 @@ public class World {
     public void update(float dt) {
 //        camera.update(dt);
         // TODO: DELEGATE THIS TO THE PLAYER CLASS OR SOMETHING
+
         fireRate -= dt;
         if (fireRate <= 0) {
             Vector3 cursorPos3D = camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));

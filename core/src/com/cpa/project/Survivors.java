@@ -39,7 +39,7 @@ public class Survivors extends Game {
         camera = new OrthographicCamera();
         camera.setTarget(player);
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        mapManager = new MapManager(camera ,1);
+        mapManager = new MapManager(camera , batch,1 , new Vector2(player.getPosition().x, player.getPosition().y));
         world = new World(player, entities, camera );
         shapeRenderer = new ShapeRenderer();
     }
@@ -49,11 +49,11 @@ public class Survivors extends Game {
         ScreenUtils.clear(0, 1, 0, 0.2f);
         this.camera.update(Gdx.graphics.getDeltaTime());
 
-        mapManager.update(Gdx.graphics.getDeltaTime(),batch, shapeRenderer, world.getPlayer().getPosition());
-
+        mapManager.update(Gdx.graphics.getDeltaTime(), shapeRenderer, world.getPlayer().getPosition());
 
         batch.setProjectionMatrix(this.world.getCamera().combined);
         batch.begin();
+
         world.update(Gdx.graphics.getDeltaTime());
         world.getPlayer().getSprite().draw(batch);
         for (Entity entity : world.getEntities()) {
