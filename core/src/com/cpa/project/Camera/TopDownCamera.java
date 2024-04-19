@@ -5,14 +5,15 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.cpa.project.Entities.Entity;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 
-public class OrthographicCamera extends com.badlogic.gdx.graphics.OrthographicCamera {
+public class TopDownCamera extends OrthographicCamera {
     Entity target;
     float lerp = 0.1f;
 
     Viewport viewport;
 
-    public OrthographicCamera() {
+    public TopDownCamera() {
         super();
         viewport = new ScreenViewport(this);
         viewport.setWorldSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -20,8 +21,7 @@ public class OrthographicCamera extends com.badlogic.gdx.graphics.OrthographicCa
 
     public void update(float dt) {
         if (target != null) {
-            position.x = target.getSprite().getX() + target.getSprite().getWidth() / 2;
-            position.y = target.getSprite().getY() + target.getSprite().getHeight() / 2;
+            this.position.lerp(new Vector3(target.getPosition().x, target.getPosition().y, 0), lerp);
         }
         viewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }

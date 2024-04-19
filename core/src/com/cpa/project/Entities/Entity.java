@@ -1,41 +1,43 @@
 package com.cpa.project.Entities;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
+import com.cpa.project.UI.ProgressBar;
 
 public abstract class Entity {
 
     final protected Sprite sprite;
-    protected Vector2 center;
-    protected Vector2 direction;
-    protected float health;
     protected Vector2 velocity;
+
+    protected float default_speed;
     protected float speed;
     protected float damage;
 
     protected EntityType entityType;
 
+    protected float health;
+    protected float maxHealth;
+
     public Entity(Vector2 position, Sprite sprite) {
         this.sprite = sprite;
         this.sprite.setPosition(position.x, position.y);
-        this.center = new Vector2(position.x + sprite.getWidth() / 2, position.y + sprite.getHeight() / 2);
     }
 
-    // Constructor for Projectiles
-    public Entity(Vector2 position, Sprite sprite, Vector2 direction, float speed, float damage) {
+    public Entity(float x, float y, Sprite sprite, Vector2 velocity, float speed, float damage) {
         this.sprite = sprite;
-        this.sprite.setPosition(position.x, position.y);
-        this.direction = direction;
-        this.speed = (int) speed;
+        this.sprite.setPosition(x, y);
+        this.velocity = velocity;
+        this.speed = speed;
         this.damage = damage;
     }
 
 
-    public Entity(Vector2 position, Sprite sprite, float speed, float health, float damage) {
+    public Entity(Vector2 position, Sprite sprite, float speed, float damage) {
         this.sprite = sprite;
         this.sprite.setPosition(position.x, position.y);
         this.speed = speed;
-        this.health = health;
         this.damage = damage;
     }
 
@@ -47,20 +49,14 @@ public abstract class Entity {
 
     public abstract void collidesWith(Entity other);
 
+
+    // Position is the center of the sprite
     public Vector2 getPosition() {
         return new Vector2(sprite.getX() + sprite.getWidth() / 2, sprite.getY() + sprite.getHeight() / 2);
     }
 
     public void setPosition(Vector2 position) {
         this.sprite.setPosition(position.x, position.y);
-    }
-
-    public float getHealth() {
-        return health;
-    }
-
-    public void setHealth(float health) {
-        this.health = health;
     }
 
     public Vector2 getVelocity() {
@@ -75,7 +71,7 @@ public abstract class Entity {
         return speed;
     }
 
-    public void setSpeed(int speed) {
+    public void setSpeed(float speed) {
         this.speed = speed;
     }
 
@@ -97,15 +93,36 @@ public abstract class Entity {
         return this.entityType;
     }
 
-    public Vector2 getCenter() {
-        return center;
+    public void resetSpeed() {
+        this.speed = default_speed;
+    }
+
+
+    public float getHealth() {
+        return health;
+    }
+
+    public void setHealth(float health) {
+        this.health = health;
+    }
+
+    public float getMaxHealth() {
+        return maxHealth;
+    }
+
+    public void setMaxHealth(float maxHealth) {
+        this.maxHealth = maxHealth;
+    }
+
+    public Texture getHealthBar() {
+        return ProgressBar.makeBarTexture(100, 5, this.health / this.maxHealth, Color.RED);
     }
 
     public enum EntityType {
         ENEMY,
-        PROJECTILE_EN,
-        PROJECTILE_PL,
+        ENEMY_PROJECTILE,
         PLAYER,
+        PLAYER_PROJECTILE,
         ENVIRONMENT
     }
 }
