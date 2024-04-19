@@ -48,7 +48,7 @@ public class PlayState {
         player.setSpeed(100);
 //        player.setHealth(10);
         player.setDamage(10);
-        player.setLevel(20);
+//        player.setLevel(20);
         PlayState.player = player;
         Entity ske1 = new Skeleton(new Vector2(900, 500), new Sprite(new Texture("threeformsPrev.png")));
         ske1.setSpeed(100);
