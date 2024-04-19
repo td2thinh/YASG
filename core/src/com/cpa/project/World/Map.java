@@ -8,7 +8,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.cpa.project.Camera.OrthographicCamera;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.cpa.project.Tiles.Tile;
 import com.cpa.project.Tiles.terrainFloorTiles;
 import com.cpa.project.World.procGen.NoiseProceduralGen;

@@ -16,7 +16,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.cpa.project.State.PlayState;
-import sun.tools.jconsole.Tab;
 
 public class GameScreen implements Screen {
 

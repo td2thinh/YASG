@@ -35,6 +35,7 @@ public class PlayState {
 
     public PlayState() {
 
+
         playerProjectiles = new HashSet<>();
         enemyProjectiles = new HashSet<>();
         removedEntities = new ArrayList<>();
