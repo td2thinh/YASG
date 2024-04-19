@@ -32,7 +32,7 @@ public class Survivors extends Game {
     public void create() {
         batch = new SpriteBatch();
         player = new Player(new Vector2(800, 240), new Sprite(new Texture("threeformsPrev.png")));
-        player.setSpeed(10);
+        player.setSpeed(25);
         player.setHealth(10);
         Set<Entity> entities = new HashSet<>();
         entities.add(player);
@@ -41,9 +41,9 @@ public class Survivors extends Game {
         camera = new OrthographicCamera();
         camera.setTarget(player);
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        map = new Map(batch, camera, player.getPosition());
         world = new World(player, entities, camera );
         shapeRenderer = new ShapeRenderer();
-        map = new Map(batch, camera, player.getPosition());
         // change the player position to the center of the map
         player.setPosition(new Vector2((float) (map.getWidth() * 48) / 2, (float) (map.getHeight() * 48) / 2));
     }

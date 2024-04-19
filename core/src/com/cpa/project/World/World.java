@@ -25,7 +25,7 @@ public class World {
 
     float fireRate = 0.1f;
 
-    public World(Player player, Set<Entity> entities, OrthographicCamera camera) {
+    public World(Player player, Set<Entity> entities, OrthographicCamera camera ) {
         this.player = player;
         this.entities = entities;
         this.camera = camera;

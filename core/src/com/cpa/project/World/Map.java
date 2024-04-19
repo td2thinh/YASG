@@ -20,14 +20,14 @@ public class Map {
     private final static int tileSize = 48; // Size of a tile in pixels
     private final static int chunkSize = 64; // Size of a chunk in tiles
 
-    private TiledMap tiledMap;
+    public static TiledMap tiledMap;
     private OrthographicCamera camera;
     private SpriteBatch batch;
 
     private Tile[][] sandCenterWGrass;
 
     private terrainFloorTiles terrainFloorTiles;
-    private OrthogonalTiledMapRenderer renderer;
+    private static OrthogonalTiledMapRenderer renderer;
 
     private WFC wfc;
     private ArrayList<Tile> WFCoutput;
