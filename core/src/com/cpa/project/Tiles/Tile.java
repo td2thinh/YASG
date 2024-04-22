@@ -11,7 +11,6 @@ import java.util.Arrays;
 public class Tile extends StaticTiledMapTile {
     private int id ;
     private BlendMode blendMode = BlendMode.ALPHA; // on utilise le mode alpha par défaut
-    private MapProperties properties ;
     private TextureRegion textureRegion ;
     private boolean isReacheable ;
 
@@ -21,7 +20,6 @@ public class Tile extends StaticTiledMapTile {
         super(textureRegion);
         this.id = id ;
         this.textureRegion = textureRegion ;
-        this.properties = new MapProperties();
         this.isReacheable = true ;
     }
 
@@ -29,7 +27,6 @@ public class Tile extends StaticTiledMapTile {
         super(textureRegion);
         this.id = id ;
         this.textureRegion = textureRegion ;
-        this.properties = new MapProperties();
         this.isReacheable = isReacheable ;
     }
 
@@ -84,11 +81,7 @@ public class Tile extends StaticTiledMapTile {
         return this.textureRegion;
     }
 
-    @Override
-    public MapProperties getProperties()
-    {
-        return this.properties;
-    }
+
 
     public void update(float dt , SpriteBatch batch ,  float x , float y ) {
         // draw the tile
@@ -133,70 +126,69 @@ public class Tile extends StaticTiledMapTile {
         TileType centerType = getTileType();
         if (centerType == TileType.Sand) {
             if (top == TileType.Grass && left == TileType.Grass) {
-                return terrainFloorTiles.sandCenterWGrass[0][0];
+                return terrainFloorTiles.sandCenterWGrass[0][0].clone(4);
             }
             if (top == TileType.Grass && right == TileType.Grass) {
-                return terrainFloorTiles.sandCenterWGrass[0][2];
+                return terrainFloorTiles.sandCenterWGrass[0][2].clone(4);
             }
             if (bottom == TileType.Grass && left == TileType.Grass) {
-                return terrainFloorTiles.sandCenterWGrass[2][0];
+                return terrainFloorTiles.sandCenterWGrass[2][0].clone(4);
             }
             if (bottom == TileType.Grass && right == TileType.Grass) {
-                return terrainFloorTiles.sandCenterWGrass[2][2];
-            }
-            if (left == TileType.Grass && right == TileType.Grass){
-                if (bottom == TileType.Sand && top == TileType.Sand){
-                    return terrainFloorTiles.sandCenterWGrass[1][1];
-                }
-                return terrainFloorTiles.sandCenterWGrass[1][1];
+                return terrainFloorTiles.sandCenterWGrass[2][2].clone(4);
             }
 
+
             if (top == TileType.Grass) {
-                return terrainFloorTiles.sandCenterWGrass[0][1];
+                return terrainFloorTiles.sandCenterWGrass[0][1].clone(4);
             }
             if (right == TileType.Grass) {
-                return terrainFloorTiles.sandCenterWGrass[1][2];
+                return terrainFloorTiles.sandCenterWGrass[1][2].clone(4);
             }
             if (bottom == TileType.Grass) {
-                return terrainFloorTiles.sandCenterWGrass[2][1];
+                return terrainFloorTiles.sandCenterWGrass[2][1].clone(4);
             }
             if (left == TileType.Grass) {
-                return terrainFloorTiles.sandCenterWGrass[1][0];
+                return terrainFloorTiles.sandCenterWGrass[1][0].clone(4);
             }
 
         }
 
         if (centerType == TileType.Rock) {
             if (top == TileType.Sand && left == TileType.Sand) {
-                return terrainFloorTiles.rockCenterWSand[0][0];
+                return terrainFloorTiles.rockCenterWSand[0][0].clone(24);
             }
             if (top == TileType.Sand && right == TileType.Sand) {
-                return terrainFloorTiles.rockCenterWSand[0][2];
+                return terrainFloorTiles.rockCenterWSand[0][2].clone(24);
             }
             if (bottom == TileType.Sand && left == TileType.Sand) {
-                return terrainFloorTiles.rockCenterWSand[2][0];
+                return terrainFloorTiles.rockCenterWSand[2][0].clone(24);
             }
             if (bottom == TileType.Sand && right == TileType.Sand) {
-                return terrainFloorTiles.rockCenterWSand[2][2];
+                return terrainFloorTiles.rockCenterWSand[2][2].clone(24);
             }
             if (top == TileType.Sand) {
-                return terrainFloorTiles.rockCenterWSand[0][1];
+                return terrainFloorTiles.rockCenterWSand[0][1].clone(24);
             }
             if (right == TileType.Sand) {
-                return terrainFloorTiles.rockCenterWSand[1][2];
+                return terrainFloorTiles.rockCenterWSand[1][2].clone(24);
             }
             if (bottom == TileType.Sand) {
-                return terrainFloorTiles.rockCenterWSand[2][1];
+                return terrainFloorTiles.rockCenterWSand[2][1].clone(24);
             }
             if (left == TileType.Sand) {
-                return terrainFloorTiles.rockCenterWSand[1][0];
+                return terrainFloorTiles.rockCenterWSand[1][0].clone(24);
             }
         }
         if (centerType == TileType.Water) {
-            return terrainFloorTiles.waterTiles[1][1];
+            return terrainFloorTiles.waterTiles[1][1].clone(44);
         }
 
         return this;
+    }
+
+    public void dispose() {
+        textureRegion.getTexture().dispose();
     }
 
 

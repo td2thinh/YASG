@@ -66,6 +66,7 @@ public class NoiseProceduralGen {
             // choose randomly between flowerTiles
             int random = MathUtils.random(0, terrainFloorTiles.flowerTiles.length - 1);
             return terrainFloorTiles.flowerTiles[random][0].clone(54); // Example flower tile
+//            return terrainFloorTiles.tree1Tile.clone(54);
         }
     }
 
@@ -111,6 +112,14 @@ public class NoiseProceduralGen {
     // Accessor for the map for rendering or other purposes
     public Tile[][] getMap() {
         return map;
+    }
+
+    public void dispose() {
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                map[x][y].dispose();
+            }
+        }
     }
 
 

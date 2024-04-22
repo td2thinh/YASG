@@ -1,7 +1,6 @@
 package com.cpa.project.State;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
@@ -16,8 +15,9 @@ import com.cpa.project.Entities.Entity;
 import com.cpa.project.Entities.Spells.SonicWave;
 import com.cpa.project.Utils.CollisionDetector;
 import com.cpa.project.Utils.SonicWaveProps;
+import com.cpa.project.World.GameMap;
 
-import javax.swing.plaf.TextUI;
+
 import java.util.*;
 
 public class PlayState {
@@ -33,8 +33,9 @@ public class PlayState {
 
     public static boolean isPaused;
 
-    public PlayState() {
+    public static GameMap map;
 
+    public PlayState() {
 
         playerProjectiles = new HashSet<>();
         enemyProjectiles = new HashSet<>();
@@ -42,11 +43,12 @@ public class PlayState {
         affectedBySonicWave = new HashMap<>();
         enemies = new HashSet<>();
 
+
         // FOR TESTING PURPOSES
         Sprite playerSprite = new Sprite(new Texture("wizard.png"));
         playerSprite.setScale(0.20f);
         Player player = new Player(new Vector2(800, 240), playerSprite);
-        player.setSpeed(100);
+        player.setSpeed(500);
 //        player.setHealth(10);
         player.setDamage(10);
 //        player.setLevel(20);
@@ -59,11 +61,21 @@ public class PlayState {
         topDownCamera.setTarget(player);
         topDownCamera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         isPaused = false;
+        map = new GameMap(topDownCamera, player.getPosition());
+        map.init();
+        map.addNoiseMapToTiledMap(player.getPosition());
+        // position the player in the middle of the map , 48 is the size of our tiles
+//        player.setPosition(new Vector2((float) (map.getWidth() * 48) / 2, (float) (map.getHeight() * 48) / 2));
+
+        // FOR TESTING PURPOSES , position the skeleton in the middle of the map as well
+//        ske1.setPosition(new Vector2(((float) (map.getWidth() * 48) / 2) + 100 , ((float) (map.getHeight() * 48) / 2) + 150 ) );
+
     }
 
     public void update(float dt) {
         topDownCamera.update(dt);
         player.update(dt);
+        map.render(player.getPosition());
         for (Entity entity : playerProjectiles) {
             entity.update(dt);
         }
@@ -156,6 +168,7 @@ public class PlayState {
         enemies.clear();
         affectedBySonicWave.clear();
         removedEntities.clear();
+//        map.dispose();
 
     }
 

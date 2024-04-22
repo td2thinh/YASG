@@ -57,6 +57,7 @@ public abstract class Entity {
 
     public void setPosition(Vector2 position) {
         this.sprite.setPosition(position.x, position.y);
+        this.sprite.setOriginCenter();
     }
 
     public Vector2 getVelocity() {
