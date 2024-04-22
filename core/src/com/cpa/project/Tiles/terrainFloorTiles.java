@@ -4,9 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class terrainFloorTiles {
     // we define the ids of the tiles in the terrain tileset
     public static final int[] GRASS = {0, 1, 2, 3, 4, 5, 6, 7, 8};
@@ -51,29 +48,29 @@ public class terrainFloorTiles {
         int treeTileWidth = treeTexture.getWidth() / 8;
         int treeTileHeight = treeTexture.getHeight() / 2;
         treeTile = new TextureRegion(treeTexture, 0, 0, treeTileWidth, treeTileHeight);
-        tree1Tile = new Tile(50, treeTile);
+        tree1Tile = new Tile(50, treeTile, false);
         sandCenterWGrass = new Tile[][] {
-                {new Tile(SAND[0], terrainTilesSplit[0][0]), new Tile(SAND[1], terrainTilesSplit[0][1]), new Tile(SAND[2], terrainTilesSplit[0][2])},
-                {new Tile(SAND[3], terrainTilesSplit[1][0]), new Tile(SAND[4], terrainTilesSplit[1][1]), new Tile(SAND[5], terrainTilesSplit[1][2])},
-                {new Tile(SAND[6], terrainTilesSplit[2][0]), new Tile(SAND[7], terrainTilesSplit[2][1]), new Tile(SAND[8], terrainTilesSplit[2][2])}
+                {new Tile(SAND[0], terrainTilesSplit[0][0], false), new Tile(SAND[1], terrainTilesSplit[0][1], false), new Tile(SAND[2], terrainTilesSplit[0][2], false)},
+                {new Tile(SAND[3], terrainTilesSplit[1][0], false), new Tile(SAND[4], terrainTilesSplit[1][1], false), new Tile(SAND[5], terrainTilesSplit[1][2], false)},
+                {new Tile(SAND[6], terrainTilesSplit[2][0], false), new Tile(SAND[7], terrainTilesSplit[2][1], false), new Tile(SAND[8], terrainTilesSplit[2][2], false)}
         };
 
         grassCenterWSand = new Tile[][] {
-                {new Tile(GRASS[0], terrainTilesSplit[0][3]), new Tile(GRASS[1], terrainTilesSplit[0][4]), new Tile(GRASS[2], terrainTilesSplit[0][5])},
-                {new Tile(GRASS[3], terrainTilesSplit[1][3]), new Tile(GRASS[4], terrainTilesSplit[1][4]), new Tile(GRASS[5], terrainTilesSplit[1][5])},
-                {new Tile(GRASS[6], terrainTilesSplit[2][3]), new Tile(GRASS[7], terrainTilesSplit[2][4]), new Tile(GRASS[8], terrainTilesSplit[2][5])}
+                {new Tile(GRASS[0], terrainTilesSplit[0][3], false), new Tile(GRASS[1], terrainTilesSplit[0][4], false), new Tile(GRASS[2], terrainTilesSplit[0][5], false)},
+                {new Tile(GRASS[3], terrainTilesSplit[1][3], false), new Tile(GRASS[4], terrainTilesSplit[1][4], false), new Tile(GRASS[5], terrainTilesSplit[1][5], false)},
+                {new Tile(GRASS[6], terrainTilesSplit[2][3], false), new Tile(GRASS[7], terrainTilesSplit[2][4], false), new Tile(GRASS[8], terrainTilesSplit[2][5], false)}
         };
 
         rockCenterWSand = new Tile[][] {
-                {new Tile(ROCK[0], terrainTilesSplit[0][7]), new Tile(ROCK[1], terrainTilesSplit[0][8]), new Tile(ROCK[2], terrainTilesSplit[0][9])},
-                {new Tile(ROCK[3], terrainTilesSplit[1][7]), new Tile(ROCK[4], terrainTilesSplit[1][8]), new Tile(ROCK[5], terrainTilesSplit[1][9])},
-                {new Tile(ROCK[6], terrainTilesSplit[2][7]), new Tile(ROCK[7], terrainTilesSplit[2][8]), new Tile(ROCK[8], terrainTilesSplit[2][9])}
+                {new Tile(ROCK[0], terrainTilesSplit[0][7], false), new Tile(ROCK[1], terrainTilesSplit[0][8], false), new Tile(ROCK[2], terrainTilesSplit[0][9], false)},
+                {new Tile(ROCK[3], terrainTilesSplit[1][7], false), new Tile(ROCK[4], terrainTilesSplit[1][8], false), new Tile(ROCK[5], terrainTilesSplit[1][9], false)},
+                {new Tile(ROCK[6], terrainTilesSplit[2][7], false), new Tile(ROCK[7], terrainTilesSplit[2][8], false), new Tile(ROCK[8], terrainTilesSplit[2][9], false)}
         };
 
         voidCenterWRock = new Tile[][] {
-                {new Tile(VOID[0], terrainTilesSplit[0][9]), new Tile(VOID[1], terrainTilesSplit[0][10]), new Tile(VOID[2], terrainTilesSplit[0][11])},
-                {new Tile(VOID[3], terrainTilesSplit[1][9]), new Tile(VOID[4], terrainTilesSplit[1][10]), new Tile(VOID[5], terrainTilesSplit[1][11])},
-                {new Tile(VOID[6], terrainTilesSplit[2][9]), new Tile(VOID[7], terrainTilesSplit[2][10]), new Tile(VOID[8], terrainTilesSplit[2][11])}
+                {new Tile(VOID[0], terrainTilesSplit[0][9], false), new Tile(VOID[1], terrainTilesSplit[0][10], false), new Tile(VOID[2], terrainTilesSplit[0][11], false)},
+                {new Tile(VOID[3], terrainTilesSplit[1][9], false), new Tile(VOID[4], terrainTilesSplit[1][10], false), new Tile(VOID[5], terrainTilesSplit[1][11], false)},
+                {new Tile(VOID[6], terrainTilesSplit[2][9], false), new Tile(VOID[7], terrainTilesSplit[2][10], false), new Tile(VOID[8], terrainTilesSplit[2][11], false)}
         };
 
         waterTiles = new Tile[][] {
@@ -83,8 +80,8 @@ public class terrainFloorTiles {
         };
 
         flowerTiles = new Tile[][] {
-                {new Tile(50, terrainTilesSplit[3][0]), new Tile(50, terrainTilesSplit[3][1]), new Tile(50, terrainTilesSplit[3][2])},
-                {new Tile(50, terrainTilesSplit[4][0]), new Tile(50, terrainTilesSplit[4][1]), new Tile(50, terrainTilesSplit[4][2])}
+                {new Tile(50, terrainTilesSplit[3][0], false), new Tile(50, terrainTilesSplit[3][1], false), new Tile(50, terrainTilesSplit[3][2], false)},
+                {new Tile(50, terrainTilesSplit[4][0], false), new Tile(50, terrainTilesSplit[4][1], false), new Tile(50, terrainTilesSplit[4][2], false)}
         };
 
 

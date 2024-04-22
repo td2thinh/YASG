@@ -6,8 +6,6 @@ import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.Vector2;
 
-import java.util.Arrays;
-
 public class Tile extends StaticTiledMapTile {
     private int id ;
     private BlendMode blendMode = BlendMode.ALPHA; // on utilise le mode alpha par défaut
@@ -20,14 +18,14 @@ public class Tile extends StaticTiledMapTile {
         super(textureRegion);
         this.id = id ;
         this.textureRegion = textureRegion ;
-        this.isReacheable = true ;
+        this.isReacheable = false ;
     }
 
-    public Tile(int id , TextureRegion textureRegion , Boolean isReacheable) {
+    public Tile(int id , TextureRegion textureRegion , boolean b ) {
         super(textureRegion);
         this.id = id ;
         this.textureRegion = textureRegion ;
-        this.isReacheable = isReacheable ;
+        this.isReacheable = b;
     }
 
     public void setPosition(Vector2 position) {
@@ -82,14 +80,13 @@ public class Tile extends StaticTiledMapTile {
     }
 
 
-
     public void update(float dt , SpriteBatch batch ,  float x , float y ) {
         // draw the tile
         batch.draw(textureRegion, x, y);
     }
 
     public Tile clone(int id) {
-        return new Tile(id, this.textureRegion);
+        return new Tile(id, this.textureRegion, false);
     }
 
     public boolean isIn(int[] ids) {
@@ -126,30 +123,35 @@ public class Tile extends StaticTiledMapTile {
         TileType centerType = getTileType();
         if (centerType == TileType.Sand) {
             if (top == TileType.Grass && left == TileType.Grass) {
-                return terrainFloorTiles.sandCenterWGrass[0][0].clone(4);
+                return terrainFloorTiles.sandCenterWGrass[0][0].clone(14);
             }
             if (top == TileType.Grass && right == TileType.Grass) {
-                return terrainFloorTiles.sandCenterWGrass[0][2].clone(4);
+                return terrainFloorTiles.sandCenterWGrass[0][2].clone(14);
             }
             if (bottom == TileType.Grass && left == TileType.Grass) {
-                return terrainFloorTiles.sandCenterWGrass[2][0].clone(4);
+                return terrainFloorTiles.sandCenterWGrass[2][0].clone(14);
             }
             if (bottom == TileType.Grass && right == TileType.Grass) {
-                return terrainFloorTiles.sandCenterWGrass[2][2].clone(4);
+                return terrainFloorTiles.sandCenterWGrass[2][2].clone(14);
             }
-
+            if (left == TileType.Grass && right == TileType.Grass){
+                if (bottom == TileType.Sand && top == TileType.Sand){
+                    return terrainFloorTiles.sandCenterWGrass[1][1].clone(14);
+                }
+                return terrainFloorTiles.sandCenterWGrass[1][1].clone(14);
+            }
 
             if (top == TileType.Grass) {
-                return terrainFloorTiles.sandCenterWGrass[0][1].clone(4);
+                return terrainFloorTiles.sandCenterWGrass[0][1].clone(14);
             }
             if (right == TileType.Grass) {
-                return terrainFloorTiles.sandCenterWGrass[1][2].clone(4);
+                return terrainFloorTiles.sandCenterWGrass[1][2].clone(14);
             }
             if (bottom == TileType.Grass) {
-                return terrainFloorTiles.sandCenterWGrass[2][1].clone(4);
+                return terrainFloorTiles.sandCenterWGrass[2][1].clone(14);
             }
             if (left == TileType.Grass) {
-                return terrainFloorTiles.sandCenterWGrass[1][0].clone(4);
+                return terrainFloorTiles.sandCenterWGrass[1][0].clone(14);
             }
 
         }
@@ -187,9 +189,8 @@ public class Tile extends StaticTiledMapTile {
         return this;
     }
 
-    public void dispose() {
+    public void dispose(){
         textureRegion.getTexture().dispose();
     }
-
 
 }

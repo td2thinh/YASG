@@ -103,9 +103,7 @@ public class NoiseProceduralGen {
         if (x < 0 || x >= width || y < 0 || y >= height) {
             return TileType.None;
         }
-        TileType res = map[x][y].getTileType();
-//        System.out.println("TileType : " + res);
-        return res;
+        return map[x][y].getTileType();
     }
 
 
