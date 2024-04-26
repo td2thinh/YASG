@@ -15,6 +15,9 @@ import com.cpa.project.World.procGen.NoiseProceduralGen;
 import com.cpa.project.World.procGen.WFC;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.PriorityQueue;
 
 public class GameMap {
     private final static int tileSize = 48; // Size of a tile in pixels
@@ -24,13 +27,10 @@ public class GameMap {
     private OrthographicCamera camera;
     private SpriteBatch batch;
 
-    private Tile[][] sandCenterWGrass;
 
     private terrainFloorTiles terrainFloorTiles;
     private OrthogonalTiledMapRenderer renderer;
 
-    private WFC wfc;
-    private ArrayList<Tile> WFCoutput;
     BitmapFont font;
 
     NoiseProceduralGen noiseProceduralGen;
@@ -39,15 +39,11 @@ public class GameMap {
     public GameMap( OrthographicCamera camera , Vector2 playerPos) {
         this.camera = camera;
         this.terrainFloorTiles = new terrainFloorTiles();
-        this.sandCenterWGrass = terrainFloorTiles.getTileBox(0); // Get sand tile box
         this.tiledMap = new TiledMap();
         this.renderer = new OrthogonalTiledMapRenderer(tiledMap);
-//        this.wfc = new WFC(  48, 48);
-//        this.WFCoutput = wfc.getOutputTiles();
         this.font = new BitmapFont();
         this.noiseProceduralGen = new NoiseProceduralGen(5, 1448, 1448);
 
-//        addNoiseMapToTiledMap(playerPos);
     }
 
     public void init(){
@@ -55,21 +51,21 @@ public class GameMap {
         this.outputNoiseMap = noiseProceduralGen.getMap();
     }
 
-    // take the output of the WFC algorithm and add it to the tiled map for rendering
-    // it's a terrain so add it to the terrain layer
-    public void addWFCtoTiledMap() {
-        TiledMapTileLayer terrainLayer = new TiledMapTileLayer(wfc.getWidth(), wfc.getHeight(), tileSize, tileSize);
-        // declare a new layer for the objects (e.g. trees, rocks, etc.) and add it to the tiled map
-        TiledMapTileLayer backgroudLayer = new TiledMapTileLayer(wfc.getWidth(), wfc.getHeight(), tileSize, tileSize);
-
-
-        for (int i = 0; i < WFCoutput.size(); i++) {
-            Tile tile = WFCoutput.get(i);
-            terrainLayer.setCell((int) tile.getPosition().x / tileSize, (int) tile.getPosition().y / tileSize, new TiledMapTileLayer.Cell().setTile(tile));
-        }
-        tiledMap.getLayers().add(terrainLayer);
-        tiledMap.getLayers().add(backgroudLayer);
-    }
+//    // take the output of the WFC algorithm and add it to the tiled map for rendering
+//    // it's a terrain so add it to the terrain layer
+//    public void addWFCtoTiledMap() {
+//        TiledMapTileLayer terrainLayer = new TiledMapTileLayer(wfc.getWidth(), wfc.getHeight(), tileSize, tileSize);
+//        // declare a new layer for the objects (e.g. trees, rocks, etc.) and add it to the tiled map
+//        TiledMapTileLayer backgroudLayer = new TiledMapTileLayer(wfc.getWidth(), wfc.getHeight(), tileSize, tileSize);
+//
+//
+//        for (int i = 0; i < WFCoutput.size(); i++) {
+//            Tile tile = WFCoutput.get(i);
+//            terrainLayer.setCell((int) tile.getPosition().x / tileSize, (int) tile.getPosition().y / tileSize, new TiledMapTileLayer.Cell().setTile(tile));
+//        }
+//        tiledMap.getLayers().add(terrainLayer);
+//        tiledMap.getLayers().add(backgroudLayer);
+//    }
 
     // take the output of the noise procedural generation and add it to the tiled map for rendering
     // it's a terrain so add it to the terrain layer
@@ -79,16 +75,6 @@ public class GameMap {
         // declare a new layer for background
         TiledMapTileLayer bgLayer = new TiledMapTileLayer(noiseProceduralGen.getWidth(), noiseProceduralGen.getHeight(), tileSize, tileSize);
 
-        for (int i=0 ; i<outputNoiseMap.length ; i++) {
-            for (int j=0 ; j<outputNoiseMap[i].length ; j++) {
-                Tile tile = com.cpa.project.Tiles.terrainFloorTiles.grassCenterWSand[1][1].clone(4);
-
-                int poxX = (int) playerposition.x - (outputNoiseMap.length / 2) * tileSize;
-                int poxY = (int) playerposition.y - (outputNoiseMap[i].length / 2) * tileSize;
-                tile.setPosition(new Vector2(poxX + i * tileSize, poxY + j * tileSize));
-                terrainLayer.setCell(i, j, new TiledMapTileLayer.Cell().setTile(tile));
-            }
-        }
 
         for (int i = 0; i < outputNoiseMap.length; i++) {
             for (int j = 0; j < outputNoiseMap[i].length; j++) {
@@ -103,6 +89,13 @@ public class GameMap {
         }
         tiledMap.getLayers().add(bgLayer);
         tiledMap.getLayers().add(terrainLayer);
+    }
+
+    public Vector2 getWorldCenter(){
+        return  new Vector2(
+                (float) (this.getWidth() * tileSize) / 2,
+                (float) (this.getHeight() * tileSize) / 2
+        );
     }
 
 
@@ -120,6 +113,17 @@ public class GameMap {
 //        Tile tile = (Tile) cell.getTile();
 //        System.out.println("Tile at player position: " + tile.isReachable());
 
+    }
+
+    // get a tile at a specific position
+    public Tile getTileAt(Vector2 position) {
+        TiledMapTileLayer terrainLayer = (TiledMapTileLayer) tiledMap.getLayers().get(1);
+        TiledMapTileLayer.Cell cell = terrainLayer.getCell((int) position.x / tileSize, (int) position.y / tileSize);
+        return (Tile) cell.getTile();
+    }
+
+    public Vector2 getTilePosition(Tile tile) {
+       return tile.getPosition();
     }
 
 
@@ -144,3 +148,5 @@ public class GameMap {
 //        noiseProceduralGen.dispose();
     }
 }
+
+

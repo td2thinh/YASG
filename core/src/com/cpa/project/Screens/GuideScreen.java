@@ -3,6 +3,7 @@ package com.cpa.project.Screens;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -10,14 +11,19 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
+import static com.cpa.project.Survivors.audioHandler;
+
 public class GuideScreen implements Screen {
 
     private final Stage guideStage = new Stage();
     Game game;
+    private final Sound ButtonClickSound;
 
     public GuideScreen(Game game) {
         Gdx.input.setInputProcessor(guideStage);
         this.game = game;
+        audioHandler.playMenuOST();
+        ButtonClickSound = audioHandler.loadSound("audio/click2.wav");
     }
 
     @Override
@@ -66,6 +72,7 @@ public class GuideScreen implements Screen {
         backButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                Gdx.app.postRunnable(() -> audioHandler.addSoundEffect("ButtonClick" , ButtonClickSound));
                 game.setScreen(new MenuScreen(game));
             }
         });
@@ -90,12 +97,12 @@ public class GuideScreen implements Screen {
 
     @Override
     public void pause() {
-
+        audioHandler.pauseGameOST();
     }
 
     @Override
     public void resume() {
-
+        audioHandler.playGameOST();
     }
 
     @Override

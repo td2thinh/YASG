@@ -40,6 +40,10 @@ public class TopDownCamera extends OrthographicCamera {
         this.target = target;
     }
 
+    public void setPos(Vector3 pos) {
+        this.position.set(pos);
+    }
+
     public void setLerp(float lerp) {
         this.lerp = lerp;
     }

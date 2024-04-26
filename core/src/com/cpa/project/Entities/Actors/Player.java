@@ -2,12 +2,11 @@ package com.cpa.project.Entities.Actors;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
-import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -19,7 +18,10 @@ import com.cpa.project.Entities.Spells.Heal;
 import com.cpa.project.Entities.Spells.SonicWave;
 import com.cpa.project.Entities.Spells.Spell;
 import com.cpa.project.State.PlayState;
+import com.cpa.project.Tiles.Tile;
 import com.cpa.project.UI.ProgressBar;
+import com.cpa.project.Utils.AnimationHandler;
+import com.cpa.project.Utils.Direction;
 
 import javax.swing.plaf.TextUI;
 import java.util.HashMap;
@@ -33,6 +35,28 @@ public class Player extends Entity {
     protected float experience;
     protected float experienceToNextLevel;
     protected int level;
+
+
+    // Animation
+    protected AnimationHandler animationHandler;
+    protected float elapsedTime = 0;
+
+    // state enum
+    protected enum State {
+        IDLE, WALKING , DAMAGED , ATTACKING
+    }
+
+    protected State lastState ;
+    protected Direction lastDirection;
+
+    protected final String IDLE = "Idle";
+    protected final String WALK = "Walk";
+    protected final String WALK_UP = "WalkUp";
+    protected final String WALK_DOWN = "WalkDown";
+    protected final String DAMAGE = "Damage";
+    protected final String ATTACK = "Attack";
+
+    protected final float TimeFrame = 0.25f;
 
     public Player(Vector2 position, Sprite sprite) {
         super(position, sprite);
@@ -50,13 +74,49 @@ public class Player extends Entity {
         this.level = 1;
         this.attackRate = 0;
         this.ATT_SPEED = DEFAULT_AS;
+
+        this.animationHandler = new AnimationHandler();
+
+        this.lastState = State.IDLE;
+        this.lastDirection = Direction.RIGHT;
+
+        initAnimations();
+    }
+
+    public void initAnimations(){
+        // load the animations
+        TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("animations/player/walk_lr.atlas"));
+        Animation<TextureRegion> idleAnimation = new Animation<>(TimeFrame, atlas.findRegions("walk_lr"));
+        this.animationHandler.add(WALK, idleAnimation);
+        atlas = new TextureAtlas(Gdx.files.internal("animations/player/idle.atlas"));
+        Animation<TextureRegion> walkAnimation = new Animation<>(TimeFrame, atlas.findRegions("idle"));
+        this.animationHandler.add(IDLE, walkAnimation);
+        atlas = new TextureAtlas(Gdx.files.internal("animations/player/walk_u.atlas"));
+        Animation<TextureRegion> walkUpAnimation = new Animation<>(TimeFrame, atlas.findRegions("walk_u"));
+        this.animationHandler.add(WALK_UP, walkUpAnimation);
+        atlas = new TextureAtlas(Gdx.files.internal("animations/player/walk_d.atlas"));
+        Animation<TextureRegion> walkDownAnimation = new Animation<>(TimeFrame, atlas.findRegions("walk_d"));
+        this.animationHandler.add(WALK_DOWN, walkDownAnimation);
+        atlas = new TextureAtlas(Gdx.files.internal("animations/player/damage.atlas"));
+        Animation<TextureRegion> damageAnimation = new Animation<>(TimeFrame, atlas.findRegions("damage"));
+        this.animationHandler.add(DAMAGE, damageAnimation);
+        atlas = new TextureAtlas(Gdx.files.internal("animations/player/attack.atlas"));
+        Animation<TextureRegion> attackAnimation = new Animation<>(TimeFrame, atlas.findRegions("attack"));
+        this.animationHandler.add(ATTACK, attackAnimation);
+
+        this.animationHandler.setCurrent(IDLE);
     }
 
 
     public void move(float dt) {
+        Vector2 newPosition = this.getPosition().cpy(); // Copy current position to a new vector
+
+        // Handle input for pausing the game
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
             PlayState.isPaused = !PlayState.isPaused;
         }
+
+        // Determine new velocity based on input
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.Q)) {
             if (Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.Z))
                 this.velocity = new Vector2(-this.speed * dt, this.speed * dt).nor();
@@ -76,13 +136,121 @@ public class Player extends Entity {
         } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN) || Gdx.input.isKeyPressed(Input.Keys.S)) {
             this.velocity = new Vector2(0, -this.speed * dt).nor();
         } else {
+            this.velocity = new Vector2(0, 0); // No movement if no key pressed
+        }
+
+        // Calculate the potential new position
+        newPosition.add(this.velocity.x * this.speed * dt, this.velocity.y * this.speed * dt);
+
+        // Check the tile at the potential new position
+        Tile tile = PlayState.map.getTileAt(newPosition);
+        if (tile != null && tile.isReachable()) {
+            // Apply the movement since the tile is reachable
+            this.sprite.translate(this.velocity.x * this.speed * dt, this.velocity.y * this.speed * dt);
+        } else {
+            // Reset velocity if the new position is not reachable
             this.velocity = new Vector2(0, 0);
         }
-        this.sprite.translate(this.velocity.x * this.speed * dt, this.velocity.y * this.speed * dt);
+
+
+        // Determine state based on velocity (IDLE or WALKING ) and also take into account the last state to determine if the player is attacking or damaged
+        State newState ;
+        if (lastState == State.DAMAGED) {
+            if (animationHandler.isFinished()) {
+                newState = State.IDLE;
+            } else {
+                newState = State.DAMAGED;
+            }
+        }else if (lastState == State.ATTACKING) {
+            if (animationHandler.isFinished()) {
+                newState = State.IDLE;
+            } else {
+                newState = State.ATTACKING;
+            }
+        }
+        else if (velocity.isZero()) {
+            newState = State.IDLE;
+        } else {
+            newState = State.WALKING;
+        }
+
+
+        // Determine direction based on velocity
+        Direction newDirection = lastDirection;
+        if (!velocity.isZero()) {
+            if (Math.abs(velocity.x) > Math.abs(velocity.y)) {
+                newDirection = (velocity.x > 0) ? Direction.RIGHT : Direction.LEFT;
+            } else {
+                newDirection = (velocity.y > 0) ? Direction.TOP : Direction.DOWN;
+            }
+        }
+
+        if (animationHandler.isCurrent(ATTACK) || animationHandler.isCurrent(DAMAGE)) {
+            if (animationHandler.isFinished()) {
+                animationHandler.setCurrent(IDLE, true);
+            }
+            else {
+                return;
+            }
+        }
+
+        // Update the animation only if the state or direction has changed
+        if ((newState != lastState || newDirection != lastDirection )  )  {
+            switch (newState) {
+                case IDLE:
+                    animationHandler.setCurrent(IDLE, true);
+                    break;
+                case WALKING:
+                    if (newDirection == Direction.TOP) {
+                        animationHandler.setCurrent(WALK_UP, true);
+                    } else if (newDirection == Direction.DOWN) {
+                        animationHandler.setCurrent(WALK_DOWN, true);
+                    } else {
+                        // For LEFT and RIGHT, use WALK and flip if necessary
+                        animationHandler.setCurrent(WALK, true);
+                        TextureRegion currentFrame = animationHandler.getFrame();
+
+                        // Flip the texture if the direction is LEFT
+                        if (newDirection == Direction.LEFT) {
+                            for (TextureRegion frame : animationHandler.getFrames(WALK)) {
+                                if (!frame.isFlipX()) frame.flip(true, false);
+                            }
+                        }else {
+                            for (TextureRegion frame : animationHandler.getFrames(WALK)) {
+                                if (frame.isFlipX()) frame.flip(true, false);
+                            }
+                        }
+                    }
+                    break;
+                case ATTACKING:
+                    animationHandler.setCurrent(ATTACK, false);
+                    break;
+                case DAMAGED:
+                    animationHandler.setCurrent(DAMAGE, false);
+                    break;
+
+            }
+
+//             Update lastState and lastDirection
+            lastState = newState;
+            lastDirection = newDirection;
+        }
+
     }
+
 
     @Override
     public void update(float dt) {
+        // Update the animation
+        this.elapsedTime += dt;
+
+        // update the animation
+        TextureRegion currentFrame = this.animationHandler.getFrame();
+        if (currentFrame != null) {
+            this.sprite.setRegion(currentFrame);
+        }
+
+
         if (this.experience > experienceToNextLevel) {
             this.experienceToNextLevel *= 1.5f;
             this.level++;
@@ -100,7 +268,7 @@ public class Player extends Entity {
         if (Gdx.input.isTouched()) {
             if (this.attackRate > 0) {
                 this.attackRate -= dt;
-            } else {
+            } else { // we fire a projectile when user clicks the mouse button
                 Vector2 playerPosition = this.getPosition();
                 Vector3 cursorPos3D = PlayState.topDownCamera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
                 Vector2 cursorPos = new Vector2(cursorPos3D.x, cursorPos3D.y);
@@ -111,7 +279,7 @@ public class Player extends Entity {
                                 new Texture("FireBallSmall.png")
                         ),
                         bulletDir,
-                        200,
+                        400,
                         this.damage
                 );
                 PlayState.playerProjectiles.add(basicBall);
@@ -132,6 +300,7 @@ public class Player extends Entity {
             } else {
                 this.spells.get("SonicWave").setSpellTime(castTime);
             }
+
         }
         if (Gdx.input.isKeyPressed(Input.Keys.H)) {
             float castTime = this.spells.get("Heal").getTimeToReady();
@@ -150,6 +319,7 @@ public class Player extends Entity {
             } else {
                 this.spells.get("AutoFireBall").setSpellTime(castTime);
             }
+            this.lastState = State.ATTACKING;
         }
 
         // Loop for spells with autocast on
@@ -170,12 +340,30 @@ public class Player extends Entity {
 
     @Override
     public void collidesWith(Entity other) {
-        // More repulsive force
-        // MORE PHYSICS BITCHES
         if (other.getEntityType() == EntityType.ENEMY) {
+            // Apply damage to the player
             this.setHealth(this.getHealth() - other.getDamage());
+
+            // Calculate knockback direction: it's the normalized vector pointing from the enemy to the player
+            Vector2 knockbackDirection = new Vector2(
+                    this.getPosition().x - other.getPosition().x,
+                    this.getPosition().y - other.getPosition().y
+            );
+
+            // Set the magnitude of the knockback
+            float knockbackStrength = 2;
+
+            this.velocity.x += knockbackDirection.x * knockbackStrength * Gdx.graphics.getDeltaTime();
+            this.velocity.y += knockbackDirection.y * knockbackStrength * Gdx.graphics.getDeltaTime();
+
+            this.sprite.translate(this.velocity.x * this.speed * Gdx.graphics.getDeltaTime(), this.velocity.y * this.speed * Gdx.graphics.getDeltaTime());
+
+
+            this.lastState = State.DAMAGED;
+
         }
     }
+
 
     @Override
     public Entity clone() {
@@ -250,5 +438,7 @@ public class Player extends Entity {
         int height = 20;
         return ProgressBar.makeBarTexture(width, height, this.experience / this.experienceToNextLevel, Color.YELLOW);
     }
+
+
 
 }

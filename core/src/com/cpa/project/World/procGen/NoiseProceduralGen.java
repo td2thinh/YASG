@@ -1,5 +1,6 @@
 package com.cpa.project.World.procGen;
 
+import com.badlogic.gdx.math.Vector2;
 import com.cpa.project.Tiles.Tile;
 import com.badlogic.gdx.math.MathUtils;
 import com.cpa.project.Tiles.TileType;
@@ -37,6 +38,9 @@ public class NoiseProceduralGen {
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 map[x][y] = chooseTileBasedOnNoise(noiseMap[x][y]);
+
+                // set the tile position
+                map[x][y].setPosition( new Vector2(x * 48, y * 48));
 
 //                double noiseValue = SimplexNoise.noise( scale * x / (double) width, scale * y / (double) height);
 //                // Normalize the value to be between 0 and 1

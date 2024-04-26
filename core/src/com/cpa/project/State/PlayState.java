@@ -1,6 +1,7 @@
 package com.cpa.project.State;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
@@ -19,6 +20,9 @@ import com.cpa.project.World.GameMap;
 
 
 import java.util.*;
+import java.util.concurrent.Future;
+
+import static com.cpa.project.Survivors.audioHandler;
 
 public class PlayState {
     public static TopDownCamera topDownCamera;
@@ -35,6 +39,9 @@ public class PlayState {
 
     public static GameMap map;
 
+
+
+
     public PlayState() {
 
         playerProjectiles = new HashSet<>();
@@ -42,47 +49,59 @@ public class PlayState {
         removedEntities = new ArrayList<>();
         affectedBySonicWave = new HashMap<>();
         enemies = new HashSet<>();
-
-
         // FOR TESTING PURPOSES
         Sprite playerSprite = new Sprite(new Texture("wizard.png"));
         playerSprite.setScale(0.20f);
         Player player = new Player(new Vector2(800, 240), playerSprite);
         player.setSpeed(500);
-//        player.setHealth(10);
+        player.setHealth(10);
         player.setDamage(10);
-//        player.setLevel(20);
+        player.setLevel(20);
         PlayState.player = player;
-        Entity ske1 = new Skeleton(new Vector2(900, 500), new Sprite(new Texture("threeformsPrev.png")));
-        ske1.setSpeed(100);
-        enemies.add(ske1);
 
         topDownCamera = new TopDownCamera();
         topDownCamera.setTarget(player);
         topDownCamera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         isPaused = false;
-        map = new GameMap(topDownCamera, player.getPosition());
+        Vector2 playerPosition = player.getPosition().cpy();
+        map = new GameMap(topDownCamera, playerPosition);
         map.init();
-        map.addNoiseMapToTiledMap(player.getPosition());
-        // position the player in the middle of the map , 48 is the size of our tiles
-//        player.setPosition(new Vector2((float) (map.getWidth() * 48) / 2, (float) (map.getHeight() * 48) / 2));
+        map.addNoiseMapToTiledMap(playerPosition);
 
-        // FOR TESTING PURPOSES , position the skeleton in the middle of the map as well
-//        ske1.setPosition(new Vector2(((float) (map.getWidth() * 48) / 2) + 100 , ((float) (map.getHeight() * 48) / 2) + 150 ) );
+        Vector2 worldcenter = map.getWorldCenter();
+        player.setPosition(worldcenter.cpy());
+
+        Skeleton ske1 = new Skeleton(new Vector2(player.getPosition().cpy().x + 100, player.getPosition().cpy().y + 100), new Sprite(new Texture("skeleton.png")));
+        ske1.setSpeed(100);
+        enemies.add(ske1);
+
+        Skeleton ske2 = new Skeleton(new Vector2(player.getPosition().cpy().x + 200, player.getPosition().cpy().y + 200), new Sprite(new Texture("skeleton.png")));
+        ske2.setSpeed(100);
+        enemies.add(ske2);
+
+        audioHandler.playGameOST();
 
     }
+
+
+
 
     public void update(float dt) {
         topDownCamera.update(dt);
         player.update(dt);
-        map.render(player.getPosition());
         for (Entity entity : playerProjectiles) {
+            // if projectile are at a certain distance from the player , remove them
+            if (entity.getPosition().dst(player.getPosition()) > 5000) {
+                removedEntities.add(entity);
+            }
+
             entity.update(dt);
         }
         for (Entity entity : enemyProjectiles) {
             entity.update(dt);
         }
         for (Entity entity : enemies) {
+            ((Skeleton) entity).handleSound(player.getPosition());
             if (affectedBySonicWave.get(entity) != null) {
                 SonicWaveProps props = affectedBySonicWave.get(entity);
                 Vector2 playerPosition = props.getPlayerPos();
@@ -102,6 +121,7 @@ public class PlayState {
                 // Put attacking animation here
                 player.collidesWith(entity);
             }
+
         }
         for (Entity entity : removedEntities) {
             playerProjectiles.remove(entity);
@@ -116,6 +136,7 @@ public class PlayState {
 
         batch.setProjectionMatrix(topDownCamera.combined);
         batch.begin();
+        map.render(player.getPosition());
         player.getSprite().draw(batch);
         for (Entity entity : playerProjectiles) {
             entity.getSprite().draw(batch);
@@ -168,16 +189,20 @@ public class PlayState {
         enemies.clear();
         affectedBySonicWave.clear();
         removedEntities.clear();
-//        map.dispose();
+        map.dispose();
+
+        audioHandler.getGameOST().dispose();
 
     }
 
     public void pause() {
         isPaused = true;
+        audioHandler.pauseGameOST();
     }
 
     public void resume() {
         isPaused = false;
+        audioHandler.playGameOST();
     }
 
     public void resize(int width, int height) {

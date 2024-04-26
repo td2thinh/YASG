@@ -18,7 +18,7 @@ public class Tile extends StaticTiledMapTile {
         super(textureRegion);
         this.id = id ;
         this.textureRegion = textureRegion ;
-        this.isReacheable = false ;
+        this.isReacheable = true ;
     }
 
     public Tile(int id , TextureRegion textureRegion , boolean b ) {
@@ -86,7 +86,7 @@ public class Tile extends StaticTiledMapTile {
     }
 
     public Tile clone(int id) {
-        return new Tile(id, this.textureRegion, false);
+        return new Tile(id, this.textureRegion, this.isReacheable);
     }
 
     public boolean isIn(int[] ids) {

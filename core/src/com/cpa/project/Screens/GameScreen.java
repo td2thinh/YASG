@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -17,6 +18,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.cpa.project.State.PlayState;
 
+import static com.cpa.project.Survivors.audioHandler;
+
 public class GameScreen implements Screen {
 
     private Game game;
@@ -25,9 +28,11 @@ public class GameScreen implements Screen {
 
     private final Stage gameStage = new Stage();
 
+    private final Sound ButtonClickSound;
 
     public GameScreen(Game game) {
         Gdx.input.setInputProcessor(gameStage);
+        ButtonClickSound = audioHandler.loadSound("audio/click2.wav");
         this.game = game;
     }
 
@@ -53,6 +58,7 @@ public class GameScreen implements Screen {
         pauseButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                Gdx.app.postRunnable(() -> audioHandler.addSoundEffect("ButtonClick" , ButtonClickSound));
                 PlayState.isPaused = true;
                 gameTable.setVisible(false);
                 resumeTable.setVisible(true);
@@ -65,6 +71,7 @@ public class GameScreen implements Screen {
         resumeButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                Gdx.app.postRunnable(() -> audioHandler.addSoundEffect("ButtonClick" , ButtonClickSound));
                 PlayState.isPaused = false;
                 resumeTable.setVisible(false);
                 gameTable.setVisible(true);
@@ -85,6 +92,7 @@ public class GameScreen implements Screen {
         returnMenu.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                Gdx.app.postRunnable(() -> audioHandler.addSoundEffect("ButtonClick" , ButtonClickSound));
                 game.setScreen(new MenuScreen(game));
                 dispose();
             }
@@ -132,7 +140,7 @@ public class GameScreen implements Screen {
     public void render(float delta) {
         if (PlayState.player.getHealth() <= 0) {
             game.setScreen(new GameOverScreen(game));
-            dispose();
+//            dispose(); // attention ce dispose() fait crash le jeu ...
         }
         if (!PlayState.isPaused) {
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);

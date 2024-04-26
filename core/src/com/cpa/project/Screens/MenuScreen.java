@@ -3,6 +3,7 @@ package com.cpa.project.Screens;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -12,14 +13,21 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.cpa.project.Utils.AudioHandler;
+
+import static com.cpa.project.Survivors.audioHandler;
 
 public class MenuScreen implements Screen {
     private final Stage menuStage = new Stage();
     private Game game;
 
+    private final Sound ButtonClickSound;
+
     public MenuScreen(Game game){
         Gdx.input.setInputProcessor(menuStage);
         this.game = game;
+        audioHandler.playMenuOST();
+        ButtonClickSound = audioHandler.loadSound("audio/click.wav");
     }
 
 
@@ -36,6 +44,7 @@ public class MenuScreen implements Screen {
         playButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                Gdx.app.postRunnable(() -> audioHandler.addSoundEffect("ButtonClick" , ButtonClickSound));
                 game.setScreen(new GameScreen(game));
             }
         });
@@ -45,15 +54,18 @@ public class MenuScreen implements Screen {
         guideButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                Gdx.app.postRunnable(() -> audioHandler.addSoundEffect("ButtonClick" , ButtonClickSound));
                 game.setScreen(new GuideScreen(game));
             }
         });
         menuTable.add(guideButton).width(200f).height(50f);
         menuTable.row();
         TextButton exitButton = new TextButton("Exit", skin);
+
         exitButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                Gdx.app.postRunnable(() -> audioHandler.addSoundEffect("ButtonClick" , ButtonClickSound));
                 Gdx.app.exit();
             }
         });
@@ -76,21 +88,23 @@ public class MenuScreen implements Screen {
 
     @Override
     public void pause() {
-
+        audioHandler.pauseMenuOST();
     }
 
     @Override
     public void resume() {
-
+        audioHandler.playMenuOST();
     }
 
     @Override
     public void hide() {
         menuStage.clear();
+        audioHandler.stopMenuOST();
     }
 
     @Override
     public void dispose() {
         menuStage.dispose();
+        audioHandler.getMenuOST().dispose();
     }
 }
