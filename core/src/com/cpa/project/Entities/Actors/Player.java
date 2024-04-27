@@ -3,6 +3,8 @@ package com.cpa.project.Entities.Actors;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -27,6 +29,8 @@ import javax.swing.plaf.TextUI;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.cpa.project.Survivors.audioHandler;
+
 public class Player extends Entity {
     protected final float DEFAULT_AS = 0.5f;
     protected float ATT_SPEED;
@@ -36,6 +40,9 @@ public class Player extends Entity {
     protected float experienceToNextLevel;
     protected int level;
 
+    private final Music fireballSound = Gdx.audio.newMusic(Gdx.files.internal("audio/flaunch.wav"));
+    private final Music healSound = Gdx.audio.newMusic(Gdx.files.internal("audio/healspell2.wav"));
+    private final Music sonicWaveSound = Gdx.audio.newMusic(Gdx.files.internal("audio/rlaunch.wav"));
 
     // Animation
     protected AnimationHandler animationHandler;
@@ -83,6 +90,10 @@ public class Player extends Entity {
         initAnimations();
     }
 
+    /**
+     * Initialize the animations for the player
+     * this loads atlas files and creates animations for the player
+     */
     public void initAnimations(){
         // load the animations
         TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("animations/player/walk_lr.atlas"));
@@ -293,6 +304,7 @@ public class Player extends Entity {
         // after casting the spell, we set the time to ready to the default cooldown
 
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+            Gdx.app.postRunnable(() -> audioHandler.addSoundEffect("sonicWave" , sonicWaveSound));
             float castTime = this.spells.get("SonicWave").getTimeToReady();
             castTime -= dt;
             if (castTime <= 0) {
@@ -303,6 +315,7 @@ public class Player extends Entity {
 
         }
         if (Gdx.input.isKeyPressed(Input.Keys.H)) {
+            Gdx.app.postRunnable(() -> audioHandler.addSoundEffect("heal" , healSound));
             float castTime = this.spells.get("Heal").getTimeToReady();
             castTime -= dt;
             if (castTime <= 0) {
@@ -311,7 +324,9 @@ public class Player extends Entity {
                 this.spells.get("Heal").setSpellTime(castTime);
             }
         }
+
         if (Gdx.input.isKeyPressed(Input.Keys.F)) {
+            Gdx.app.postRunnable(() -> audioHandler.addSoundEffect("fireball" , fireballSound));
             float castTime = this.spells.get("AutoFireBall").getTimeToReady();
             castTime -= dt;
             if (castTime <= 0) {

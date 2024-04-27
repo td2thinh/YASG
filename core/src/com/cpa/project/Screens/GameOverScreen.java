@@ -3,6 +3,8 @@ package com.cpa.project.Screens;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -12,14 +14,19 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
+import static com.cpa.project.Survivors.audioHandler;
+
 public class GameOverScreen implements Screen {
 
     private final Stage gameOverStage = new Stage();
     Game game;
+    private final Music ButtonClickSound;
 
     public GameOverScreen(Game game) {
         Gdx.input.setInputProcessor(gameOverStage);
+        audioHandler.playMusic("gameover");
         this.game = game;
+        ButtonClickSound = audioHandler.loadMusic("audio/click.wav");
     }
 
     @Override
@@ -37,6 +44,7 @@ public class GameOverScreen implements Screen {
         returnMenu.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                Gdx.app.postRunnable(() -> audioHandler.addSoundEffect("ButtonClick" , ButtonClickSound));
                 game.setScreen(new MenuScreen(game));
                 dispose();
             }
@@ -61,16 +69,17 @@ public class GameOverScreen implements Screen {
 
     @Override
     public void pause() {
-
+        audioHandler.pauseMusic("gameover");
     }
 
     @Override
     public void resume() {
-
+        audioHandler.playMusic("gameover");
     }
 
     @Override
     public void hide() {
+        audioHandler.stopMusic("gameover");
         gameOverStage.clear();
     }
 

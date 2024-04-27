@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -28,11 +29,11 @@ public class GameScreen implements Screen {
 
     private final Stage gameStage = new Stage();
 
-    private final Sound ButtonClickSound;
+    private final Music ButtonClickSound;
 
     public GameScreen(Game game) {
         Gdx.input.setInputProcessor(gameStage);
-        ButtonClickSound = audioHandler.loadSound("audio/click2.wav");
+        ButtonClickSound = audioHandler.loadMusic("audio/click2.wav");
         this.game = game;
     }
 
@@ -58,7 +59,7 @@ public class GameScreen implements Screen {
         pauseButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                Gdx.app.postRunnable(() -> audioHandler.addSoundEffect("ButtonClick" , ButtonClickSound));
+                Gdx.app.postRunnable(() -> audioHandler.addSoundEffect("ButtonClick" , ButtonClickSound)); // on utilise postRunnable pour éviter les problèmes de thread avec openGL
                 PlayState.isPaused = true;
                 gameTable.setVisible(false);
                 resumeTable.setVisible(true);
@@ -134,6 +135,8 @@ public class GameScreen implements Screen {
         gameStage.addActor(resumeTable);
         gameStage.addActor(gameTable);
         gameStage.addActor(skillsTable);
+
+        audioHandler.playMusic("game");
     }
 
     @Override
@@ -174,16 +177,19 @@ public class GameScreen implements Screen {
 
     @Override
     public void pause() {
-
+        playState.pause();
+        audioHandler.pauseMusic("game");
     }
 
     @Override
     public void resume() {
-
+        playState.resume();
+        audioHandler.playMusic("game");
     }
 
     @Override
     public void hide() {
+        audioHandler.stopMusic("game");
     }
 
     @Override

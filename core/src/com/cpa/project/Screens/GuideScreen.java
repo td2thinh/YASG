@@ -3,6 +3,7 @@ package com.cpa.project.Screens;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -17,13 +18,13 @@ public class GuideScreen implements Screen {
 
     private final Stage guideStage = new Stage();
     Game game;
-    private final Sound ButtonClickSound;
+    private final Music ButtonClickSound;
 
     public GuideScreen(Game game) {
         Gdx.input.setInputProcessor(guideStage);
         this.game = game;
-        audioHandler.playMenuOST();
-        ButtonClickSound = audioHandler.loadSound("audio/click2.wav");
+        audioHandler.playMusic("menu");
+        ButtonClickSound = audioHandler.loadMusic("audio/click2.wav");
     }
 
     @Override
@@ -97,12 +98,12 @@ public class GuideScreen implements Screen {
 
     @Override
     public void pause() {
-        audioHandler.pauseGameOST();
+        audioHandler.pauseMusic("menu");
     }
 
     @Override
     public void resume() {
-        audioHandler.playGameOST();
+        audioHandler.playMusic("menu");
     }
 
     @Override

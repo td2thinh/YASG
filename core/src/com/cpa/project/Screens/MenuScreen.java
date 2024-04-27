@@ -3,6 +3,7 @@ package com.cpa.project.Screens;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -21,13 +22,13 @@ public class MenuScreen implements Screen {
     private final Stage menuStage = new Stage();
     private Game game;
 
-    private final Sound ButtonClickSound;
+    private final Music ButtonClickSound;
 
     public MenuScreen(Game game){
         Gdx.input.setInputProcessor(menuStage);
         this.game = game;
-        audioHandler.playMenuOST();
-        ButtonClickSound = audioHandler.loadSound("audio/click.wav");
+        audioHandler.playMusic("menu");
+        ButtonClickSound = audioHandler.loadMusic("audio/click.wav");
     }
 
 
@@ -88,23 +89,24 @@ public class MenuScreen implements Screen {
 
     @Override
     public void pause() {
-        audioHandler.pauseMenuOST();
+        audioHandler.pauseMusic("menu");
     }
 
     @Override
     public void resume() {
-        audioHandler.playMenuOST();
+        audioHandler.playMusic("menu");
     }
 
     @Override
     public void hide() {
         menuStage.clear();
-        audioHandler.stopMenuOST();
+        audioHandler.stopMusic("menu");
     }
 
     @Override
     public void dispose() {
         menuStage.dispose();
-        audioHandler.getMenuOST().dispose();
+        audioHandler.disposeSound(ButtonClickSound);
+
     }
 }

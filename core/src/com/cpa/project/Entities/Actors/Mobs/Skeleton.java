@@ -1,5 +1,6 @@
 package com.cpa.project.Entities.Actors.Mobs;
 
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
@@ -12,14 +13,11 @@ public class Skeleton extends Entity {
     public float timeToNextPath = 0;
 
     private String soundName ;
-    private Sound roamingSound;
     public Skeleton(Vector2 position, Sprite sprite, float speed, float damage, float health ) {
         super(position, sprite, speed, damage);
         this.health = health;
         this.maxHealth = health;
         this.entityType = EntityType.ENEMY;
-        this.soundName = "skeletonRoaming + " + this.hashCode();
-        this.roamingSound = audioHandler.loadSound("audio/monster/Monster-1.wav");
     }
 
     public Skeleton(Vector2 position, Sprite sprite ) {
@@ -30,8 +28,6 @@ public class Skeleton extends Entity {
         this.damage = 10;
         this.entityType = EntityType.ENEMY;
         this.velocity = new Vector2(0, 0);
-        this.soundName = "skeletonRoaming + " + this.hashCode();
-        this.roamingSound = audioHandler.loadSound("audio/monster/Monster-1.wav");
     }
 
     @Override
@@ -65,13 +61,24 @@ public class Skeleton extends Entity {
                 this.sprite, this.speed, this.damage, this.health);
     }
 
-    public void handleSound(Vector2 position) {
-        if (this.getPosition().dst(position) < 500 ){
-            if (audioHandler.hasSound(soundName)) {
-                audioHandler.playSoundEffect(soundName);
-            } else {
-                audioHandler.addSoundEffect(soundName, roamingSound);
+    public void handleSound(Vector2 playerPosition) {
+        float soundRange = 1500;
+        float distance = this.getPosition().dst(playerPosition);
+
+        // Check if the zombie is within the sound range of the player
+        if (distance < soundRange) {
+            // Check if the sound is already playing, if not, add it & play it
+            if (!audioHandler.hasSound("zombieRoaming")) {
+                Music zombieSound = audioHandler.loadMusic("audio/monster/Monster-1.wav");
+                audioHandler.addSoundEffect("zombieRoaming", zombieSound);
             }
+            // Adjust the volume based on distance, quieter if further away
+            float volume = 1 - (distance / soundRange);
+            audioHandler.playSoundEffect("zombieRoaming", volume);
+        } else {
+            // Stop the sound if the zombie is out of range
+            audioHandler.stopSoundEffect("zombieRoaming");
         }
     }
+
 }

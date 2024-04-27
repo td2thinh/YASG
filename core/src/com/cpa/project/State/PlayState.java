@@ -79,7 +79,6 @@ public class PlayState {
         ske2.setSpeed(100);
         enemies.add(ske2);
 
-        audioHandler.playGameOST();
 
     }
 
@@ -191,18 +190,14 @@ public class PlayState {
         removedEntities.clear();
         map.dispose();
 
-        audioHandler.getGameOST().dispose();
-
     }
 
     public void pause() {
         isPaused = true;
-        audioHandler.pauseGameOST();
     }
 
     public void resume() {
         isPaused = false;
-        audioHandler.playGameOST();
     }
 
     public void resize(int width, int height) {

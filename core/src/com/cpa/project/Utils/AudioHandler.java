@@ -14,40 +14,87 @@ public class AudioHandler {
     // we're going to use the libGDX Music class to handle the streaming of the audio file
     private Music gameOST;
     private Music menuOST;
-    private  HashMap<String, Sound> soundEffects;
-    private Timer timer;
+    private Music gameOverOST;
+    private Music zombieOST;
+    private  HashMap<String, Music> soundEffects;
 
     public AudioHandler() {
         soundEffects = new HashMap<>();
-        timer = new Timer();
     }
 
-    // This method is used to play the game's background music.
-    public void playGameOST() {
-        gameOST.setLooping(true);
-        gameOST.play();
+    public void playMusic(String name) {
+        switch (name) {
+            case "game":
+                this.gameOST.setLooping(true);
+                this.gameOST.setVolume(0.25f);
+                this.gameOST.play();
+                break;
+            case "menu":
+                this.menuOST.setLooping(true);
+                this.menuOST.setVolume(0.25f);
+                this.menuOST.play();
+                break;
+            case "gameover":
+                this.gameOverOST.setLooping(true);
+                this.gameOverOST.play();
+                break;
+            case "zombie":
+                this.zombieOST.setLooping(true);
+                this.zombieOST.setVolume(0.25f);
+                this.zombieOST.play();
+                break;
+        }
     }
 
-    // This method is used to pause the game's background music.
-    public void pauseGameOST() {
-        gameOST.pause();
+    public void pauseMusic(String name) {
+        switch (name) {
+            case "game":
+                this.gameOST.pause();
+                break;
+            case "menu":
+                this.menuOST.pause();
+                break;
+            case "gameover":
+                this.gameOverOST.pause();
+                break;
+            case "zombie":
+                this.zombieOST.pause();
+                break;
+        }
     }
 
-    // This method is used to stop the game's background music.
-    public void stopGameOST() {
-        gameOST.stop();
+    public void stopMusic(String name) {
+        switch (name) {
+            case "game":
+                this.gameOST.stop();
+                break;
+            case "menu":
+                this.menuOST.stop();
+                break;
+            case "gameover":
+                this.gameOverOST.stop();
+                break;
+            case "zombie":
+                this.zombieOST.stop();
+                break;
+        }
     }
+
 
     // add a sound effect to the sound effects map
-    public void addSoundEffect(String name, Sound soundEffect) {
+    public void addSoundEffect(String name, Music soundEffect) {
         soundEffects.put(name, soundEffect);
+        soundEffect.setVolume(0.25f);
         soundEffect.play();
     }
 
-    // play a sound effect ( like a spell cast, or a hit sound) , this method will play the sound effect once and then stop
-    public void playSoundEffect(String name) {
-        soundEffects.get(name).play();
+    public void playSoundEffect(String name, float volume) {
+        if (soundEffects.containsKey(name)) {
+            soundEffects.get(name).setVolume(volume);
+            soundEffects.get(name).play();
+        }
     }
+
 
     // stop a sound effect
     public void stopSoundEffect(String name) {
@@ -62,7 +109,10 @@ public class AudioHandler {
 
     public void dispose() {
         gameOST.dispose();
-        for (Map.Entry<String, Sound> entry : soundEffects.entrySet()) {
+        menuOST.dispose();
+        gameOverOST.dispose();
+        zombieOST.dispose();
+        for (Map.Entry<String, Music> entry : soundEffects.entrySet()) {
             entry.getValue().dispose();
         }
     }
@@ -83,30 +133,38 @@ public class AudioHandler {
         this.menuOST = menuOST;
     }
 
-    public void playMenuOST() {
-        menuOST.setLooping(true);
-        menuOST.play();
-    }
-
-    public void pauseMenuOST() {
-        menuOST.pause();
-    }
-
-    public void stopMenuOST() {
-        menuOST.stop();
+    public boolean hasSound(String name) {
+        return soundEffects.containsKey(name) && soundEffects.get(name).isPlaying();
     }
 
 
-    public Music getMenuOST() {
-        return menuOST;
+
+    public void disposeSound(Music buttonClickSound) {
+        buttonClickSound.dispose();
     }
 
-    public Music getGameOST() {
-        return gameOST;
+    public void disposeMusic(String menu) {
+        switch (menu) {
+            case "menu":
+                menuOST.dispose();
+                break;
+            case "game":
+                gameOST.dispose();
+                break;
+            case "gameover":
+                gameOverOST.dispose();
+                break;
+            case "zombie":
+                zombieOST.dispose();
+                break;
+        }
     }
 
+    public void setGameOverOST(Music music) {
+        this.gameOverOST = music;
+    }
 
-    public boolean hasSound(String soundName) {
-        return soundEffects.containsKey(soundName);
+    public void setZombieOST(Music music) {
+        this.zombieOST = music;
     }
 }

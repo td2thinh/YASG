@@ -19,6 +19,8 @@ public class Survivors extends Game {
         audioHandler = new AudioHandler();
         audioHandler.setMenuOST(audioHandler.loadMusic("audio/MenuOST.wav"));
         audioHandler.setGameOST(audioHandler.loadMusic("audio/forest.wav"));
+        audioHandler.setGameOverOST(audioHandler.loadMusic("audio/GameOverOST.wav"));
+        audioHandler.setZombieOST(audioHandler.loadMusic("audio/monster/Monster-1.wav"));
         batch = new SpriteBatch();
         menuScreen = new MenuScreen(this);
         this.setScreen(menuScreen);
