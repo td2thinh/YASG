@@ -46,7 +46,7 @@ public class GameOverScreen implements Screen {
             public void changed(ChangeEvent event, Actor actor) {
                 Gdx.app.postRunnable(() -> audioHandler.addSoundEffect("ButtonClick" , ButtonClickSound));
                 game.setScreen(new MenuScreen(game));
-                dispose();
+//                dispose();
             }
         });
         gameOverTable.row();

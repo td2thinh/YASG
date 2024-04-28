@@ -160,6 +160,7 @@ public class Player extends Entity {
             this.sprite.translate(this.velocity.x * this.speed * dt, this.velocity.y * this.speed * dt);
         } else {
             // Reset velocity if the new position is not reachable
+            System.out.println("Not reachable");
             this.velocity = new Vector2(0, 0);
         }
 
