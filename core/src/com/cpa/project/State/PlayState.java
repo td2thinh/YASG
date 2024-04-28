@@ -135,7 +135,7 @@ public class PlayState {
 
         batch.setProjectionMatrix(topDownCamera.combined);
         batch.begin();
-        map.render(player.getPosition());
+        map.render();
         player.getSprite().draw(batch);
         for (Entity entity : playerProjectiles) {
             entity.getSprite().draw(batch);
@@ -148,6 +148,8 @@ public class PlayState {
             batch.draw(healthBar, entity.getPosition().x - healthBar.getWidth() / 2, entity.getPosition().y + entity.getSprite().getHeight() / 2);
             entity.getSprite().draw(batch);
         }
+
+
         // UI Elements need to be drawn at the end so that they are on top of everything
 
         // TODO: Figure out a way to make these UI elements using Scene2D

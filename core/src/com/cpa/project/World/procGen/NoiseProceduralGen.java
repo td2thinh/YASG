@@ -58,18 +58,18 @@ public class NoiseProceduralGen {
 
     private Tile chooseTileBasedOnNoise(float noiseValue) {
         if (noiseValue<0.2){
-            return terrainFloorTiles.waterTiles[1][1].clone(44); // Example center tile of water
+            return terrainFloorTiles.waterTiles[1][1].clone(44); //  center tile of water
         }
         else if (noiseValue < 0.3) {
-            return terrainFloorTiles.rockCenterWSand[1][1].clone(24); // Example center tile of rock
+            return terrainFloorTiles.rockCenterWSand[1][1].clone(24); //  center tile of rock
         } else if (noiseValue < 0.6) {
-            return terrainFloorTiles.sandCenterWGrass[1][1].clone(14); // Example center tile of sand
+            return terrainFloorTiles.sandCenterWGrass[1][1].clone(14); //  center tile of sand
         } else if (noiseValue < 0.8) {
-            return terrainFloorTiles.grassCenterWSand[1][1].clone(4); // Example center tile of grass
+            return terrainFloorTiles.grassCenterWSand[1][1].clone(4); //  center tile of grass
         }else{
             // choose randomly between flowerTiles
             int random = MathUtils.random(0, terrainFloorTiles.flowerTiles.length - 1);
-            return terrainFloorTiles.flowerTiles[random][0].clone(54); // Example flower tile
+            return terrainFloorTiles.flowerTiles[random][0].clone(54); //  flower tile
 //            return terrainFloorTiles.tree1Tile.clone(54);
         }
     }

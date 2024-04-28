@@ -154,13 +154,13 @@ public class Player extends Entity {
         newPosition.add(this.velocity.x * this.speed * dt, this.velocity.y * this.speed * dt);
 
         // Check the tile at the potential new position
-        Tile tile = PlayState.map.getTileAt(newPosition);
+        Tile tile = PlayState.map.getTileAt(newPosition , this.sprite.getRegionHeight());
         if (tile != null && tile.isReachable()) {
             // Apply the movement since the tile is reachable
             this.sprite.translate(this.velocity.x * this.speed * dt, this.velocity.y * this.speed * dt);
         } else {
             // Reset velocity if the new position is not reachable
-            System.out.println("Not reachable");
+//            System.out.println("Not reachable");
             this.velocity = new Vector2(0, 0);
         }
 
