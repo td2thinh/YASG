@@ -58,6 +58,9 @@ public class GradientGraph {
                             }
                         }
                     }
+                    else{
+                        graph[nextX][nextY] = new Location(nextX, nextY, 0, new Vector2(0,0));
+                    }
                     seen.add(next);
                     numTiles++;
                 }
