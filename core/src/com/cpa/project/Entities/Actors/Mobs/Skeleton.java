@@ -22,7 +22,8 @@ public class Skeleton extends Entity {
 
     public Skeleton(Vector2 position, Sprite sprite ) {
         super(position, sprite);
-        this.speed = 20;
+        this.speed = 100;
+        this.default_speed = 100;
         this.health = 100;
         this.maxHealth = 100;
         this.damage = 10;

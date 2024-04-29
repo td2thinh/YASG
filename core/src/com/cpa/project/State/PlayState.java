@@ -14,7 +14,9 @@ import com.cpa.project.Entities.Actors.Mobs.Skeleton;
 import com.cpa.project.Entities.Actors.Player;
 import com.cpa.project.Entities.Entity;
 import com.cpa.project.Entities.Spells.SonicWave;
+import com.cpa.project.Tiles.Tile;
 import com.cpa.project.Utils.CollisionDetector;
+import com.cpa.project.Utils.Pathfinding.GradientGraph;
 import com.cpa.project.Utils.SonicWaveProps;
 import com.cpa.project.World.GameMap;
 
@@ -34,12 +36,13 @@ public class PlayState {
     public static Set<Entity> enemyProjectiles;
     public static List<Entity> removedEntities;
     public static Set<Entity> enemies;
+    public Vector2 lastTileXY;
 
     public static boolean isPaused;
 
     public static GameMap map;
 
-
+    private GradientGraph gradientGraph;
 
 
     public PlayState() {
@@ -79,21 +82,29 @@ public class PlayState {
         ske2.setSpeed(100);
         enemies.add(ske2);
 
-
+        this.lastTileXY = map.getEntityTileXY(PlayState.player);
+        this.gradientGraph = new GradientGraph();
+        this.gradientGraph.compute();
     }
-
-
 
 
     public void update(float dt) {
         topDownCamera.update(dt);
         player.update(dt);
+        int lastTileX = (int) lastTileXY.x;
+        int lastTileY = (int) lastTileXY.y;
+        Vector2 playerTileXY = map.getEntityTileXY(player);
+        int playerTileX = (int) playerTileXY.x;
+        int playerTileY = (int) playerTileXY.y;
+        if (lastTileX != playerTileX || lastTileY != playerTileY) {
+            this.lastTileXY = playerTileXY;
+            this.gradientGraph.compute();
+        }
         for (Entity entity : playerProjectiles) {
             // if projectile are at a certain distance from the player , remove them
             if (entity.getPosition().dst(player.getPosition()) > 5000) {
                 removedEntities.add(entity);
             }
-
             entity.update(dt);
         }
         for (Entity entity : enemyProjectiles) {
@@ -101,19 +112,19 @@ public class PlayState {
         }
         for (Entity entity : enemies) {
             ((Skeleton) entity).handleSound(player.getPosition());
+            if (entity.getPosition().sub(player.getPosition()).len() > SonicWave.MAX_DISTANCE_AWAY) {
+                affectedBySonicWave.remove(entity);
+                entity.resetSpeed();
+            }
             if (affectedBySonicWave.get(entity) != null) {
                 SonicWaveProps props = affectedBySonicWave.get(entity);
-                Vector2 playerPosition = props.getPlayerPos();
-                Vector2 entityPosition = entity.getPosition();
-                Vector2 direction = entityPosition.sub(playerPosition);
-                if (direction.len() > SonicWave.MAX_DISTANCE_AWAY) {
-                    affectedBySonicWave.remove(entity);
-                    entity.setVelocity(new Vector2(0, 0));
-                    entity.resetSpeed();
-                } else {
-                    entity.setVelocity(props.getDirection());
-                    entity.setSpeed(props.getSpeed());
-                }
+                entity.setVelocity(props.getDirection());
+                entity.setSpeed(props.getSpeed());
+
+            } else {
+                Vector2 entityTileXY = map.getEntityTileXY(entity);
+                Vector2 velocity = gradientGraph.getDirection((int) entityTileXY.x, (int) entityTileXY.y);
+                entity.setVelocity(velocity);
             }
             entity.update(dt);
             if (CollisionDetector.checkCollision(player, entity)) {
@@ -191,7 +202,7 @@ public class PlayState {
         affectedBySonicWave.clear();
         removedEntities.clear();
         map.dispose();
-
+        this.gradientGraph = null;
     }
 
     public void pause() {

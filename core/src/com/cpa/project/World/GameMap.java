@@ -8,6 +8,8 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.cpa.project.Entities.Entity;
+import com.cpa.project.State.PlayState;
 import com.cpa.project.Tiles.Tile;
 import com.cpa.project.Tiles.terrainFloorTiles;
 import com.cpa.project.World.procGen.NoiseProceduralGen;
@@ -29,7 +31,7 @@ public class GameMap {
     NoiseProceduralGen noiseProceduralGen;
     Tile[][] outputNoiseMap;
 
-    public GameMap( OrthographicCamera camera , Vector2 playerPos) {
+    public GameMap(OrthographicCamera camera, Vector2 playerPos) {
         this.camera = camera;
         this.terrainFloorTiles = new terrainFloorTiles();
         this.tiledMap = new TiledMap();
@@ -39,7 +41,7 @@ public class GameMap {
 
     }
 
-    public void init(){
+    public void init() {
         this.noiseProceduralGen.generateMap();
         this.outputNoiseMap = noiseProceduralGen.getMap();
     }
@@ -107,16 +109,15 @@ public class GameMap {
         tiledMap.getLayers().add(terrainLayer);
     }
 
-    public Vector2 getWorldCenter(){
-        return  new Vector2(
+    public Vector2 getWorldCenter() {
+        return new Vector2(
                 (float) (this.getWidth() * tileSize) / 2,
                 (float) (this.getHeight() * tileSize) / 2
         );
     }
 
 
-
-    public void render( ) {
+    public void render() {
         // Render the WFC output tiles
         renderer.setView(camera);
         renderer.render();
@@ -132,7 +133,7 @@ public class GameMap {
     }
 
 
-    public Tile getTileAt(Vector2 position , int playerHe) {
+    public Tile getTileAt(Vector2 position, int playerHe) {
         TiledMapTileLayer terrainLayer = (TiledMapTileLayer) tiledMap.getLayers().get(1);
 
         // Adjust the Y position based on the height of the player sprite
@@ -142,15 +143,8 @@ public class GameMap {
 
         TiledMapTileLayer.Cell cell = terrainLayer.getCell(tileX, tileY);
 
-        if (cell != null) {
-            return (Tile) cell.getTile();
-        } else {
-            return null; // No tile found at this position
-        }
+        return (Tile) cell.getTile();
     }
-
-
-
 
 
     public void update(float dt, TiledMapRenderer tiledMapRenderer) {
@@ -165,6 +159,17 @@ public class GameMap {
 
     public int getHeight() {
         return this.noiseProceduralGen.getHeight();
+    }
+
+    public  Tile[][]  getTiles() {
+        return this.outputNoiseMap;
+    }
+
+    public Vector2 getEntityTileXY(Entity entity) {
+        int entityHeight = entity.getSprite().getRegionHeight();
+        Vector2 position = entity.getPosition();
+        return new Vector2(position.x / tileSize,
+                (position.y - entityHeight) / tileSize);
     }
 
     public void dispose() {
