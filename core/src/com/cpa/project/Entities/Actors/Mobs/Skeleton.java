@@ -20,6 +20,18 @@ public class Skeleton extends Entity {
         this.entityType = EntityType.ENEMY;
     }
 
+    public Skeleton(){
+        super(new Vector2(0,0));
+
+        this.speed = 100;
+        this.default_speed = 100;
+        this.health = 100;
+        this.maxHealth = 100;
+        this.damage = 10;
+        this.entityType = EntityType.ENEMY;
+        this.velocity = new Vector2(0, 0);
+    }
+
     public Skeleton(Vector2 position, Sprite sprite ) {
         super(position, sprite);
         this.speed = 100;
@@ -37,11 +49,6 @@ public class Skeleton extends Entity {
 
     }
 
-    public void moveTowardsPlayer(Vector2 playerPosition) {
-        Vector2 direction = new Vector2(playerPosition.x - this.getPosition().x, playerPosition.y - this.getPosition().y);
-        direction.nor();
-        this.velocity = direction;
-    }
 
 
     @Override
@@ -62,6 +69,7 @@ public class Skeleton extends Entity {
                 this.sprite, this.speed, this.damage, this.health);
     }
 
+    @Override
     public void handleSound(Vector2 playerPosition) {
         float soundRange = 1500;
         float distance = this.getPosition().dst(playerPosition);

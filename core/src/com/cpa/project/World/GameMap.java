@@ -62,29 +62,7 @@ public class GameMap {
 //        tiledMap.getLayers().add(backgroudLayer);
 //    }
 
-    // take the output of the noise procedural generation and add it to the tiled map for rendering
-    // it's a terrain so add it to the terrain layer
-//    public void addNoiseMapToTiledMap(Vector2 playerposition) {
-//        TiledMapTileLayer terrainLayer = new TiledMapTileLayer(noiseProceduralGen.getWidth(), noiseProceduralGen.getHeight(), tileSize, tileSize);
-//
-//        // declare a new layer for background
-//        TiledMapTileLayer bgLayer = new TiledMapTileLayer(noiseProceduralGen.getWidth(), noiseProceduralGen.getHeight(), tileSize, tileSize);
-//
-//
-//        for (int i = 0; i < outputNoiseMap.length; i++) {
-//            for (int j = 0; j < outputNoiseMap[i].length; j++) {
-//                Tile tile = outputNoiseMap[i][j];
-//
-//                // i need the tiles to be positioned relative to the player ( player needs to spawn in the middle of the map to not encounter edges )
-//                int poxX = (int) playerposition.x - (outputNoiseMap.length / 2) * tileSize;
-//                int poxY = (int) playerposition.y - (outputNoiseMap[i].length / 2) * tileSize;
-//                tile.setPosition(new Vector2(poxX + i * tileSize, poxY + j * tileSize));
-//                terrainLayer.setCell(i, j, new TiledMapTileLayer.Cell().setTile(tile));
-//            }
-//        }
-//        tiledMap.getLayers().add(bgLayer);
-//        tiledMap.getLayers().add(terrainLayer);
-//    }
+
     public void addNoiseMapToTiledMap(Vector2 playerposition) {
         TiledMapTileLayer terrainLayer = new TiledMapTileLayer(noiseProceduralGen.getWidth(), noiseProceduralGen.getHeight(), tileSize, tileSize);
         TiledMapTileLayer bgLayer = new TiledMapTileLayer(noiseProceduralGen.getWidth(), noiseProceduralGen.getHeight(), tileSize, tileSize);
@@ -142,7 +120,9 @@ public class GameMap {
         int tileY = ((int) position.y - playerHe) / tileSize;
 
         TiledMapTileLayer.Cell cell = terrainLayer.getCell(tileX, tileY);
-
+        if (cell == null) {
+            return null;
+        }
         return (Tile) cell.getTile();
     }
 

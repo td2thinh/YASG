@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Json;
 import com.cpa.project.UI.ProgressBar;
+import com.cpa.project.Utils.AssetManager;
 
 import java.io.Serializable;
 
@@ -26,6 +27,14 @@ public abstract class Entity implements Serializable {
     public Entity(Vector2 position, Sprite sprite) {
         this.sprite = sprite;
         this.sprite.setPosition(position.x, position.y);
+        this.velocity = new Vector2(0, 0);
+    }
+
+    public Entity(Vector2 position){
+        this.sprite = new Sprite(AssetManager.getPlayerTexture()); // default texture for us is the player texture for now ( avoids null pointer exception)
+        this.sprite.setPosition(position.x, position.y);
+        this.velocity = new Vector2(0, 0);
+
     }
 
     public Entity(float x, float y, Sprite sprite, Vector2 velocity, float speed, float damage) {
@@ -34,6 +43,7 @@ public abstract class Entity implements Serializable {
         this.velocity = velocity;
         this.speed = speed;
         this.damage = damage;
+
     }
 
 
@@ -129,4 +139,6 @@ public abstract class Entity implements Serializable {
         PLAYER_PROJECTILE,
         ENVIRONMENT
     }
+
+    public void handleSound(Vector2 playerPosition) {}
 }

@@ -2,7 +2,6 @@ package com.cpa.project.Entities.Actors;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
@@ -23,6 +22,7 @@ import com.cpa.project.State.PlayState;
 import com.cpa.project.Tiles.Tile;
 import com.cpa.project.UI.ProgressBar;
 import com.cpa.project.Utils.AnimationHandler;
+import com.cpa.project.Utils.AssetManager;
 import com.cpa.project.Utils.Direction;
 
 import javax.swing.plaf.TextUI;
@@ -67,6 +67,31 @@ public class Player extends Entity {
 
     public Player(Vector2 position, Sprite sprite) {
         super(position, sprite);
+        this.entityType = EntityType.PLAYER;
+        this.speed = 100;
+        this.health = 100;
+        this.maxHealth = 100;
+        this.damage = 10;
+        this.spells = new HashMap<>();
+        this.spells.put("AutoFireBall", new AutoFireBall());
+        this.spells.put("SonicWave", new SonicWave());
+        this.spells.put("Heal", new Heal());
+        this.experience = 0;
+        this.experienceToNextLevel = 100;
+        this.level = 1;
+        this.attackRate = 0;
+        this.ATT_SPEED = DEFAULT_AS;
+
+        this.animationHandler = new AnimationHandler();
+
+        this.lastState = State.IDLE;
+        this.lastDirection = Direction.RIGHT;
+
+        initAnimations();
+    }
+
+    public Player(Vector2 position) {
+        super(position);
         this.entityType = EntityType.PLAYER;
         this.speed = 100;
         this.health = 100;
@@ -288,7 +313,7 @@ public class Player extends Entity {
                 Projectile basicBall = new BasicFireBall(
                         playerPosition,
                         new Sprite(
-                                new Texture("FireBallSmall.png")
+                                AssetManager.getFireBallSmall()
                         ),
                         bulletDir,
                         400,

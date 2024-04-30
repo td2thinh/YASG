@@ -94,8 +94,9 @@ public class GameScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 Gdx.app.postRunnable(() -> audioHandler.addSoundEffect("ButtonClick" , ButtonClickSound));
+                dispose();
                 game.setScreen(new MenuScreen(game));
-//                dispose();
+
             }
         });
         // Add the return to menu button to the resume table

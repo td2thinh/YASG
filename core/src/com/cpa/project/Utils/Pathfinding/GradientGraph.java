@@ -42,7 +42,7 @@ public class GradientGraph {
                 new Vector2(1, 0),
                 new Vector2(-1, 0)};
 
-        while (!frontier.isEmpty() && numTiles < 5000) {
+        while (!frontier.isEmpty() && numTiles < 6000) {
             Vector2 current = frontier.poll();
             for (Vector2 next : getNeighbors(current)) {
                 int nextX = (int) next.x;
@@ -69,7 +69,7 @@ public class GradientGraph {
     }
 
     public Vector2 getDirection(int x, int y) {
-        return graph[x][y].getDirection();
+        return ( x<= graph.length && y <= graph[0].length &&  graph[x][y]!=null) ? graph[x][y].getDirection() : new Vector2(0, 0);
     }
 
     private List<Vector2> getNeighbors(Vector2 tile) {
