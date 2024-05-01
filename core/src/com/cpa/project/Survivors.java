@@ -30,7 +30,6 @@ public class Survivors extends Game {
     public void dispose() {
         super.dispose();
         batch.dispose();
-        menuScreen.dispose();
         audioHandler.dispose();
     }
 

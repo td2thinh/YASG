@@ -46,6 +46,7 @@ public class GameOverScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 Gdx.app.postRunnable(() -> audioHandler.addSoundEffect("ButtonClick" , ButtonClickSound));
+                Gdx.app.postRunnable(() -> dispose());
                 game.setScreen(new MenuScreen(game));
             }
         });
@@ -81,7 +82,6 @@ public class GameOverScreen implements Screen {
     public void hide() {
         audioHandler.stopMusic("gameover");
         gameOverStage.clear();
-        this.dispose();
     }
 
     @Override

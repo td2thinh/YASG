@@ -3,6 +3,7 @@ package com.cpa.project.Tiles;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.cpa.project.Utils.AssetManager;
 
 public class terrainFloorTiles {
     // we define the ids of the tiles in the terrain tileset
@@ -42,9 +43,9 @@ public class terrainFloorTiles {
 
     public static void init() {
 
-        terrainTiles = new Texture(Gdx.files.internal("terrain.png"));
+        terrainTiles =  AssetManager.getTerrainTiles();
         terrainTilesSplit = TextureRegion.split(terrainTiles, 48, 48);
-        treeTexture = new Texture(Gdx.files.internal("map/grassland_trees.png")); // pas le meme tileset
+        treeTexture = AssetManager.getTreeTexture(); // pas le meme tileset
         int treeTileWidth = treeTexture.getWidth() / 8;
         int treeTileHeight = treeTexture.getHeight() / 2;
         treeTile = new TextureRegion(treeTexture, 0, 0, treeTileWidth, treeTileHeight);

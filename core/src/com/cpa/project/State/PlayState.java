@@ -44,7 +44,7 @@ public class PlayState {
 
     private GradientGraph gradientGraph;
 
-    private float spawnInterval = 5;
+    private final float spawnInterval = 5;
     private float spawnTimer = spawnInterval;
 
     public PlayState() {
@@ -159,7 +159,6 @@ public class PlayState {
             spawnTimer = spawnInterval;
         }
         this.gradientGraph.compute();
-
         for (Entity entity : playerProjectiles) {
             // if projectile are at a certain distance from the player , remove them
             if (entity.getPosition().dst(player.getPosition()) > 2000) {
@@ -233,7 +232,7 @@ public class PlayState {
         for (Entity entity : enemies) {
             entity.getSprite().draw(batch);
         }
-        if (PATH_FINDING_DEBUG){
+        if (PATH_FINDING_DEBUG) {
             Location[][] graph = this.gradientGraph.getGraph();
             BitmapFont font = AssetManager.getFont();
             Tile[][] tiles = map.getTiles();
@@ -242,28 +241,21 @@ public class PlayState {
                     if (graph[i][j] != null) {
                         font.draw(batch, String.valueOf(graph[i][j].getCost()), i * 48, j * 48 - 5);
                         Vector2 direction = graph[i][j].getDirection();
-                        if (Objects.equals(direction, new Vector2(1, 0))){
+                        if (Objects.equals(direction, new Vector2(1, 0))) {
                             font.draw(batch, ">", i * 48, j * 48);
-                        }
-                        else if (Objects.equals(direction, new Vector2(-1, 0))){
+                        } else if (Objects.equals(direction, new Vector2(-1, 0))) {
                             font.draw(batch, "<", i * 48, j * 48);
-                        }
-                        else if (Objects.equals(direction, new Vector2(0, 1))){
+                        } else if (Objects.equals(direction, new Vector2(0, 1))) {
                             font.draw(batch, "^", i * 48, j * 48);
-                        }
-                        else if (Objects.equals(direction, new Vector2(0, -1))){
+                        } else if (Objects.equals(direction, new Vector2(0, -1))) {
                             font.draw(batch, "v", i * 48, j * 48);
-                        }
-                        else if (Objects.equals(direction, new Vector2(1,1).nor())){
+                        } else if (Objects.equals(direction, new Vector2(1, 1).nor())) {
                             font.draw(batch, "|>", i * 48, j * 48);
-                        }
-                        else if (Objects.equals(direction, new Vector2(-1,1).nor())){
+                        } else if (Objects.equals(direction, new Vector2(-1, 1).nor())) {
                             font.draw(batch, "<|", i * 48, j * 48);
-                        }
-                        else if (Objects.equals(direction, new Vector2(1,-1).nor())){
+                        } else if (Objects.equals(direction, new Vector2(1, -1).nor())) {
                             font.draw(batch, "|>", i * 48, j * 48);
-                        }
-                        else if (Objects.equals(direction, new Vector2(-1,-1).nor())) {
+                        } else if (Objects.equals(direction, new Vector2(-1, -1).nor())) {
                             font.draw(batch, "<|", i * 48, j * 48);
                         }
                     }
@@ -292,23 +284,27 @@ public class PlayState {
     }
 
     public void dispose() {
-        player.dispose();
-        for (Entity entity : playerProjectiles) {
-            entity.dispose();
-        }
-        for (Entity entity : enemyProjectiles) {
-            entity.dispose();
-        }
-        for (Entity entity : enemies) {
-            entity.dispose();
-        }
+//        player.dispose();
+//        for (Entity entity : playerProjectiles) {
+//            entity.dispose();
+//        }
+//        for (Entity entity : enemyProjectiles) {
+//            entity.dispose();
+//        }
+//        for (Entity entity : enemies) {
+//            entity.dispose();
+//        }
         playerProjectiles.clear();
         enemyProjectiles.clear();
         enemies.clear();
         affectedBySonicWave.clear();
         removedEntities.clear();
+        playerProjectiles = null;
+        enemyProjectiles = null;
+        enemies = null;
+        affectedBySonicWave = null;
+        removedEntities = null;
         map.dispose();
-
         this.gradientGraph = null;
 //        AssetManager.dispose();
     }

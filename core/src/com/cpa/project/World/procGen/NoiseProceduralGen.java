@@ -12,7 +12,7 @@ public class NoiseProceduralGen {
     private final int scale; // Scale of the noise map , octave count
     private final int width;
     private final int height; // Width and height of the map in tiles
-    private final Tile[][] map; // The map array that will hold the final tiles
+    private Tile[][] map; // The map array that will hold the final tiles
 
     public NoiseProceduralGen( int scale, int width, int height) {
         this.scale = scale;
@@ -117,11 +117,7 @@ public class NoiseProceduralGen {
     }
 
     public void dispose() {
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                map[x][y].dispose();
-            }
-        }
+        map = null;
     }
 
 

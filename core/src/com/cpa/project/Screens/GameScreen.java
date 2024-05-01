@@ -40,7 +40,9 @@ public class GameScreen implements Screen {
 
     public GameScreen(Game game) {
         Gdx.input.setInputProcessor(gameStage);
+        batch = new SpriteBatch();
         ButtonClickSound = audioHandler.loadMusic("audio/click2.wav");
+        playState = new PlayState();
         this.game = game;
     }
 
@@ -49,8 +51,6 @@ public class GameScreen implements Screen {
         if (!VisUI.isLoaded())
             VisUI.load(AssetManager.getSkin());
         // Init the state, when the game is done I think this needs a loading screen
-        playState = new PlayState();
-        batch = new SpriteBatch();
         Skin skin = AssetManager.getSkin();
 
         // The div for the pause button
@@ -103,9 +103,8 @@ public class GameScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 Gdx.app.postRunnable(() -> audioHandler.addSoundEffect("ButtonClick", ButtonClickSound));
-                dispose();
+                Gdx.app.postRunnable(() -> dispose());
                 game.setScreen(new MenuScreen(game));
-
             }
         });
         // Add the return to menu button to the resume table
@@ -114,13 +113,13 @@ public class GameScreen implements Screen {
         // Set the resume table to invisible
         resumeTable.setVisible(false);
 
-        Texture sonicWave = new Texture(Gdx.files.internal("icons/BTNInnerFire.jpg"));
+        Texture sonicWave = AssetManager.getSonicWave();
         Image sonicWaveImage = new Image(sonicWave);
-        Texture fireBall = new Texture(Gdx.files.internal("icons/BTNFireBolt.jpg"));
+        Texture fireBall = AssetManager.getFireBall();
         Image fireBallImage = new Image(fireBall);
-        Texture autoFireBall = new Texture(Gdx.files.internal("icons/BTNOrbOfFire.jpg"));
+        Texture autoFireBall = AssetManager.getAutoFireBall();
         Image autoFireBallImage = new Image(autoFireBall);
-        Texture heal = new Texture(Gdx.files.internal("icons/BTNHeal.jpg"));
+        Texture heal = AssetManager.getHeal();
         Image healImage = new Image(heal);
 
         Table skillsTable = new Table();
@@ -173,6 +172,8 @@ public class GameScreen implements Screen {
     public void render(float delta) {
         if (PlayState.player.getHealth() <= 0) {
             game.setScreen(new GameOverScreen(game));
+//            this.dispose();
+            PlayState.isPaused = true;
 //            dispose(); // attention ce dispose() fait crash le jeu ...
         }
         if (!PlayState.isPaused) {
@@ -199,7 +200,7 @@ public class GameScreen implements Screen {
             font.draw(batch, healCD, unprojectedPos.x + 673 + 188 + 5, unprojectedPos.y + 32);
         }
         font.draw(batch, "Lv. " + PlayState.player.getLevel(),
-                unprojectedPos.x +  570 + 140, unprojectedPos.y - 53);
+                unprojectedPos.x + 570 + 140, unprojectedPos.y - 53);
         font.draw(batch, Math.round(PlayState.player.getHealth() / PlayState.player.getMaxHealth() * 100) + "%",
                 unprojectedPos.x + 570 + 142, unprojectedPos.y - 73);
 
@@ -226,10 +227,14 @@ public class GameScreen implements Screen {
     @Override
     public void hide() {
         audioHandler.stopMusic("game");
-        this.dispose();
     }
 
     @Override
     public void dispose() {
+        playState.dispose();
+        gameStage.dispose();
+        batch.dispose();
+        playState = null;
+//        VisUI.dispose();
     }
 }

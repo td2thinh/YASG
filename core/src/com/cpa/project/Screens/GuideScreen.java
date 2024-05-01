@@ -44,13 +44,13 @@ public class GuideScreen implements Screen {
         spells.setFontScale(1.5f);
         guideTable.add(spells);
         guideTable.row();
-        Texture sonicWave = new Texture(Gdx.files.internal("icons/BTNInnerFire.jpg"));
+        Texture sonicWave = AssetManager.getSonicWave();
         Image sonicWaveImage = new Image(sonicWave);
-        Texture fireBall = new Texture(Gdx.files.internal("icons/BTNFireBolt.jpg"));
+        Texture fireBall = AssetManager.getFireBall();
         Image fireBallImage = new Image(fireBall);
-        Texture autoFireBall = new Texture(Gdx.files.internal("icons/BTNOrbOfFire.jpg"));
+        Texture autoFireBall = AssetManager.getAutoFireBall();
         Image autoFireBallImage = new Image(autoFireBall);
-        Texture heal = new Texture(Gdx.files.internal("icons/BTNHeal.jpg"));
+        Texture heal = AssetManager.getHeal();
         Image healImage = new Image(heal);
         guideTable.add(fireBallImage).width(50f).height(50f).spaceTop(10f);
         guideTable.row();
@@ -75,6 +75,7 @@ public class GuideScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 Gdx.app.postRunnable(() -> audioHandler.addSoundEffect("ButtonClick" , ButtonClickSound));
+                Gdx.app.postRunnable(() -> dispose());
                 game.setScreen(new MenuScreen(game));
             }
         });
@@ -110,7 +111,6 @@ public class GuideScreen implements Screen {
     @Override
     public void hide() {
         guideStage.clear();
-        this.dispose();
     }
 
     @Override

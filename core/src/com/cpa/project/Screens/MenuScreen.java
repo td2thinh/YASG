@@ -47,6 +47,7 @@ public class MenuScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 Gdx.app.postRunnable(() -> audioHandler.addSoundEffect("ButtonClick" , ButtonClickSound));
+                Gdx.app.postRunnable(() -> dispose());
                 game.setScreen(new GameScreen(game));
             }
         });
@@ -57,6 +58,7 @@ public class MenuScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 Gdx.app.postRunnable(() -> audioHandler.addSoundEffect("ButtonClick" , ButtonClickSound));
+                Gdx.app.postRunnable(() -> dispose());
                 game.setScreen(new GuideScreen(game));
             }
         });
@@ -103,7 +105,6 @@ public class MenuScreen implements Screen {
     public void hide() {
         menuStage.clear();
         audioHandler.stopMusic("menu");
-        this.dispose();
     }
 
     @Override
