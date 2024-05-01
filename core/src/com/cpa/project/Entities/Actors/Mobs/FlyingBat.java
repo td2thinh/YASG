@@ -1,24 +1,20 @@
 package com.cpa.project.Entities.Actors.Mobs;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.cpa.project.Entities.Actors.Player;
 import com.cpa.project.Entities.Entity;
-import com.cpa.project.State.PlayState;
-import com.cpa.project.Tiles.Tile;
 import com.cpa.project.Utils.AnimationHandler;
 import com.cpa.project.Utils.AssetManager;
 import com.cpa.project.Utils.Direction;
 
 import static com.cpa.project.Survivors.audioHandler;
 
-public class bat extends Entity {
+public class FlyingBat extends Entity {
     private String soundName ;
 
     // Animation
@@ -29,7 +25,7 @@ public class bat extends Entity {
          WALKING  , ATTACKING
     }
 
-    protected bat.State lastState ;
+    protected FlyingBat.State lastState ;
     protected Direction lastDirection;
 
     protected final String WALK_RIGHT = "WalkRight";
@@ -42,7 +38,7 @@ public class bat extends Entity {
     protected final float TimeFrame = 0.25f;
 
 
-    public bat(Vector2 position, Sprite sprite, float speed, float damage, float health ) {
+    public FlyingBat(Vector2 position, Sprite sprite, float speed, float damage, float health ) {
         super(position, sprite, speed, damage);
         this.health = health;
         this.maxHealth = health;
@@ -56,7 +52,7 @@ public class bat extends Entity {
         initAnimations();
     }
 
-    public bat(){
+    public FlyingBat(){
         super(new Vector2(0,0) , new Sprite(AssetManager.getSkeletonTexture()));
         this.speed = 100;
         this.default_speed = 100;
@@ -74,7 +70,7 @@ public class bat extends Entity {
 
     }
 
-    public bat(Vector2 position, Sprite sprite ) {
+    public FlyingBat(Vector2 position, Sprite sprite ) {
         super(position, sprite);
         this.speed = 100;
         this.default_speed = 100;
@@ -91,7 +87,7 @@ public class bat extends Entity {
         initAnimations();
     }
 
-    public bat(Vector2 position ) {
+    public FlyingBat(Vector2 position ) {
         super(position);
         this.speed = 150;
         this.default_speed = 120;
@@ -152,8 +148,7 @@ public class bat extends Entity {
 
     @Override
     public void update(float dt) {
-        this.sprite.translate(this.velocity.x * this.speed * dt, this.velocity.y * this.speed * dt);
-
+        super.update(dt);
         this.elapsedTime += dt;
         move(dt);
         // update the animation
@@ -204,7 +199,7 @@ public class bat extends Entity {
 
     @Override
     public Entity clone() {
-        return new bat(new Vector2(this.getSprite().getX(),
+        return new FlyingBat(new Vector2(this.getSprite().getX(),
                 this.getSprite().getY()),
                 this.sprite, this.speed, this.damage, this.health);
     }

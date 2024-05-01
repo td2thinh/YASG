@@ -1,11 +1,7 @@
 package com.cpa.project.Entities;
 
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Json;
-import com.cpa.project.UI.ProgressBar;
 import com.cpa.project.Utils.AssetManager;
 
 import java.io.Serializable;
@@ -34,7 +30,6 @@ public abstract class Entity implements Serializable {
         this.sprite = new Sprite(AssetManager.getPlayerTexture()); // default texture for us is the player texture for now ( avoids null pointer exception)
         this.sprite.setPosition(position.x, position.y);
         this.velocity = new Vector2(0, 0);
-
     }
 
     public Entity(float x, float y, Sprite sprite, Vector2 velocity, float speed, float damage) {
@@ -43,7 +38,6 @@ public abstract class Entity implements Serializable {
         this.velocity = velocity;
         this.speed = speed;
         this.damage = damage;
-
     }
 
 
@@ -54,7 +48,9 @@ public abstract class Entity implements Serializable {
         this.damage = damage;
     }
 
-    public abstract void update(float dt);
+    public void update(float dt){
+        this.sprite.translate(this.velocity.x * this.speed * dt, this.velocity.y * this.speed * dt);
+    }
 
     public void dispose() {
         sprite.getTexture().dispose();
@@ -128,9 +124,6 @@ public abstract class Entity implements Serializable {
         this.maxHealth = maxHealth;
     }
 
-    public Texture getHealthBar() {
-        return ProgressBar.makeBarTexture(100, 5, this.health / this.maxHealth, Color.RED);
-    }
 
     public enum EntityType {
         ENEMY,

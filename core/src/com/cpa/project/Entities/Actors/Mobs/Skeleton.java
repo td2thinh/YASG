@@ -42,15 +42,6 @@ public class Skeleton extends Entity {
         this.entityType = EntityType.ENEMY;
         this.velocity = new Vector2(0, 0);
     }
-
-    @Override
-    public void update(float dt) {
-        this.sprite.translate(this.velocity.x * this.speed * dt, this.velocity.y * this.speed * dt);
-
-    }
-
-
-
     @Override
     public void collidesWith(Entity other) {
         if (other.getEntityType() == EntityType.PLAYER_PROJECTILE) {

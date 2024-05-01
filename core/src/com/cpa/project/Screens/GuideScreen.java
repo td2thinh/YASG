@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.cpa.project.Utils.AssetManager;
 
 import static com.cpa.project.Survivors.audioHandler;
 
@@ -29,7 +30,7 @@ public class GuideScreen implements Screen {
 
     @Override
     public void show() {
-        Skin skin = new Skin(Gdx.files.internal("skin/OS Eight.json"));
+        Skin skin = AssetManager.getSkin();
         Table guideTable = new Table();
         guideTable.setFillParent(true);
         guideTable.defaults().spaceBottom(10f);
@@ -109,6 +110,7 @@ public class GuideScreen implements Screen {
     @Override
     public void hide() {
         guideStage.clear();
+        this.dispose();
     }
 
     @Override

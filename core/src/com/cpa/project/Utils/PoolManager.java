@@ -1,11 +1,11 @@
 package com.cpa.project.Utils;
 
+import com.cpa.project.Entities.Actors.Mobs.FlyingBat;
 import com.cpa.project.Entities.Actors.Mobs.Skeleton;
-import com.cpa.project.Entities.Actors.Mobs.bat;
 
 public class PoolManager {
     private static final EntityPool<Skeleton> skeletonPool = new EntityPool<>(Skeleton.class);
-    private static final EntityPool<bat> batPool = new EntityPool<>(bat.class);
+    private static final EntityPool<FlyingBat> batPool = new EntityPool<>(FlyingBat.class);
 
     public static Skeleton obtainSkeleton() {
         return skeletonPool.obtain();
@@ -15,11 +15,11 @@ public class PoolManager {
         skeletonPool.free(skeleton);
     }
 
-    public static bat obtainBat() {
+    public static FlyingBat obtainBat() {
         return batPool.obtain();
     }
 
-    public static void freeBat(bat Bat) {
+    public static void freeBat(FlyingBat Bat) {
         batPool.free(Bat);
     }
 }

@@ -3,12 +3,8 @@ package com.cpa.project.Entities.Actors;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.cpa.project.Entities.Entity;
@@ -20,12 +16,10 @@ import com.cpa.project.Entities.Spells.SonicWave;
 import com.cpa.project.Entities.Spells.Spell;
 import com.cpa.project.State.PlayState;
 import com.cpa.project.Tiles.Tile;
-import com.cpa.project.UI.ProgressBar;
 import com.cpa.project.Utils.AnimationHandler;
 import com.cpa.project.Utils.AssetManager;
 import com.cpa.project.Utils.Direction;
 
-import javax.swing.plaf.TextUI;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -86,7 +80,6 @@ public class Player extends Entity {
 
         this.lastState = State.IDLE;
         this.lastDirection = Direction.RIGHT;
-
         initAnimations();
     }
 
@@ -146,11 +139,6 @@ public class Player extends Entity {
 
     public void move(float dt) {
         Vector2 newPosition = this.getPosition().cpy(); // Copy current position to a new vector
-
-        // Handle input for pausing the game
-        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
-            PlayState.isPaused = !PlayState.isPaused;
-        }
 
         // Determine new velocity based on input
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.Q)) {
@@ -467,19 +455,6 @@ public class Player extends Entity {
     public float getExperienceToNextLevel() {
         return experienceToNextLevel;
     }
-
-    public Texture getHealthBar() {
-        int width = 300;
-        int height = 20;
-        return ProgressBar.makeBarTexture(width, height, this.health / this.maxHealth, Color.RED);
-    }
-
-    public Texture getXPBar() {
-        int width = 300;
-        int height = 20;
-        return ProgressBar.makeBarTexture(width, height, this.experience / this.experienceToNextLevel, Color.YELLOW);
-    }
-
 
 
 }

@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.cpa.project.Utils.AssetManager;
 import com.cpa.project.Utils.AudioHandler;
 
 import static com.cpa.project.Survivors.audioHandler;
@@ -34,7 +35,7 @@ public class MenuScreen implements Screen {
 
     @Override
     public void show() {
-        Skin skin = new Skin(Gdx.files.internal("skin/OS Eight.json"));
+        Skin skin = AssetManager.getSkin();
         Table menuTable = new Table(skin);
         menuTable.setFillParent(true);
         menuTable.defaults().pad(15f);
@@ -102,12 +103,12 @@ public class MenuScreen implements Screen {
     public void hide() {
         menuStage.clear();
         audioHandler.stopMusic("menu");
+        this.dispose();
     }
 
     @Override
     public void dispose() {
         menuStage.dispose();
         audioHandler.disposeSound(ButtonClickSound);
-
     }
 }
