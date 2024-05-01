@@ -28,6 +28,12 @@ public abstract class Entity implements Serializable {
 
     public Entity(Vector2 position){
         this.sprite = new Sprite(AssetManager.getPlayerTexture()); // default texture for us is the player texture for now ( avoids null pointer exception)
+        this.health = 100000000;
+        this.maxHealth = 100000000;
+        this.speed = 100;
+        this.default_speed = 100;
+        this.damage = 40;
+        this.entityType = EntityType.ENEMY;
         this.sprite.setPosition(position.x, position.y);
         this.velocity = new Vector2(0, 0);
     }

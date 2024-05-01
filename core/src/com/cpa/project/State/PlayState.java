@@ -58,10 +58,10 @@ public class PlayState {
         Sprite playerSprite = new Sprite(AssetManager.getPlayerTexture());
         playerSprite.setScale(0.20f);
         Player player = new Player(new Vector2(800, 240), playerSprite);
-        player.setSpeed(500);
-        player.setHealth(10);
-        player.setDamage(10);
-        player.setLevel(20);
+//        player.setSpeed(200);
+//        player.setHealth(100);
+//        player.setDamage(10);
+//        player.setLevel(1);
         PlayState.player = player;
 
         topDownCamera = new TopDownCamera();
@@ -80,17 +80,20 @@ public class PlayState {
         this.lastTileXY = map.getEntityTileXY(PlayState.player);
         this.gradientGraph = new GradientGraph();
         this.gradientGraph.compute();
-
     }
 
     private void spawnEnemyAroundPlayer() {
-        float distance = MathUtils.random(0, 1000); // Random distance from player within radius
+//        float distance = MathUtils.random(0, 1000); // Random distance from player within radius
+        float distance = MathUtils.random(600, 1000);
         float angle = MathUtils.random(0, MathUtils.PI2); // Random angle for full 360 degrees
 
         float enemyX = player.getPosition().x + distance * MathUtils.cos(angle);
         float enemyY = player.getPosition().y + distance * MathUtils.sin(angle);
         Vector2 tileXY = map.getTilePosition(new Vector2(enemyX, enemyY), AssetManager.getSkeletonTexture().getHeight());
         if (this.gradientGraph.getGraph()[(int) tileXY.x][(int) tileXY.y] == null) {
+            return;
+        }
+        if (!map.getTiles()[(int) tileXY.x][(int) tileXY.y].isReachable()) {
             return;
         }
         Entity enemy = chooseEnemyTypeBasedOnPlayerLevel(player.getLevel(), enemyX, enemyY);
@@ -130,6 +133,8 @@ public class PlayState {
             Bat.setHealth(Bat.getMaxHealth());
             return Bat;
         } else {
+            // TODO: THIS COULD SPAWN A HUGE WIZARD THAT INSTANTLY KILLS THE PLAYER
+            // TODO: AT THIS POINT, IT'S NOT A BUG, IT'S A FEATURE
             // if we add more enemies, we can add more cases here
             // Randomly choose between Skeleton and Bat
             int random = MathUtils.random(0, 1);
@@ -184,6 +189,7 @@ public class PlayState {
             else if (entity.getPosition().dst(player.getPosition()) < 200) {
 //                System.out.println("triggered");
                 Vector2 direction = player.getPosition().sub(entity.getPosition()).nor();
+                entity.resetSpeed();
                 entity.setVelocity(direction);
             }
             entity.update(dt);

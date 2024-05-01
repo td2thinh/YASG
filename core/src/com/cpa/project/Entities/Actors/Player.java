@@ -62,7 +62,7 @@ public class Player extends Entity {
     public Player(Vector2 position, Sprite sprite) {
         super(position, sprite);
         this.entityType = EntityType.PLAYER;
-        this.speed = 100;
+        this.speed = 230;
         this.health = 100;
         this.maxHealth = 100;
         this.damage = 10;

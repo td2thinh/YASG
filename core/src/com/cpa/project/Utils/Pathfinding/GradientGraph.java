@@ -120,7 +120,7 @@ public class GradientGraph {
                 if (graph[i][j].getCost() == Integer.MAX_VALUE){
                     continue;
                 }
-                smoothVector(i, j, 5);
+                smoothVector(i, j, 10);
             }
         }
 
@@ -129,7 +129,9 @@ public class GradientGraph {
     }
 
     public Vector2 getDirection(int x, int y) {
-        return graph[x][y].getDirection();
+        return (x <= graph.length && y <= graph[0].length && graph[x][y] != null)
+                ? graph[x][y].getDirection()
+                : new Vector2(0, 0);
     }
 
     public List<Location> getNeighbors(Location tile) {

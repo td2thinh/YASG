@@ -88,10 +88,17 @@ public class GameMap {
     }
 
     public Vector2 getWorldCenter() {
-        return new Vector2(
+        Vector2 spawnLocation =  new Vector2(
                 (float) (this.getWidth() * tileSize) / 2,
                 (float) (this.getHeight() * tileSize) / 2
         );
+        while (!getTileAt(spawnLocation, 0).isReachable()) {
+            spawnLocation = new Vector2(
+                    (float) (this.getWidth() * tileSize) / 2 + (float) Math.random() * 100,
+                    (float) (this.getHeight() * tileSize) / 2 + (float) Math.random() * 100
+            );
+        }
+        return spawnLocation;
     }
 
 

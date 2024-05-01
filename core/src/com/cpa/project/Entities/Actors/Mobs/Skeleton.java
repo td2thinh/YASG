@@ -5,6 +5,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.cpa.project.Entities.Entity;
+import com.cpa.project.Utils.AssetManager;
 
 import static com.cpa.project.Survivors.audioHandler;
 
@@ -15,8 +16,7 @@ public class Skeleton extends Entity {
     private String soundName ;
 
     public Skeleton(){
-        super(new Vector2(0,0));
-
+        super(new Vector2(0,0) , new Sprite(AssetManager.getSkeletonTexture()));
         this.speed = 100;
         this.default_speed = 100;
         this.health = 100;
