@@ -126,6 +126,12 @@ public class GameMap {
         return (Tile) cell.getTile();
     }
 
+    public Vector2 getTilePosition(Vector2 position, int playerHe) {
+        int tileX = (int) position.x / tileSize;
+        int tileY = ((int) position.y - playerHe) / tileSize;
+
+        return new Vector2(tileX, tileY);
+    }
 
     public void update(float dt, TiledMapRenderer tiledMapRenderer) {
         this.camera = camera;
@@ -141,15 +147,16 @@ public class GameMap {
         return this.noiseProceduralGen.getHeight();
     }
 
-    public  Tile[][]  getTiles() {
+    public Tile[][] getTiles() {
         return this.outputNoiseMap;
     }
 
     public Vector2 getEntityTileXY(Entity entity) {
         int entityHeight = entity.getSprite().getRegionHeight();
         Vector2 position = entity.getPosition();
-        return new Vector2(position.x / tileSize,
-                (position.y - entityHeight) / tileSize);
+        int vecX = (int) position.x / tileSize;
+        int vecY = (int) (position.y - entityHeight) / tileSize;
+        return new Vector2(vecX, vecY);
     }
 
     public void dispose() {

@@ -176,7 +176,6 @@ public class GameScreen implements Screen {
 //            dispose(); // attention ce dispose() fait crash le jeu ...
         }
         if (!PlayState.isPaused) {
-            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
             playState.update(delta);
             playState.render(batch);
         }

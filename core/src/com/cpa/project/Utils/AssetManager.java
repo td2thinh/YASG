@@ -17,7 +17,8 @@ public class AssetManager {
 
     private static final Skin skin = new Skin(Gdx.files.internal("skin/OS Eight.json"));
 
-    private static final Texture barTexture = makeBarTexture(100, 5);
+    private static final Texture arrowTexture = new Texture("arrow.png");
+
     private static final BitmapFont font = new BitmapFont();
 
     public static Texture getPlayerTexture() {
@@ -44,20 +45,10 @@ public class AssetManager {
         return font;
     }
 
-    public static Texture getBarTexture() {
-        return barTexture;
+    public static Texture getArrowTexture () {
+        return arrowTexture;
     }
 
-    public static Texture makeBarTexture(int width, int height) {
-        Pixmap pixmap = new Pixmap(width + 4, height + 2, Pixmap.Format.RGBA8888);
-        pixmap.setColor(Color.BLACK);
-        pixmap.fill();
-        pixmap.setColor(Color.GRAY);
-        pixmap.fillRectangle(2, 1, width, height);
-        Texture texture = new Texture(pixmap);
-        pixmap.dispose();
-        return texture;
-    }
 
     public static void dispose() {
         playerTexture.dispose();

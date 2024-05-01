@@ -2,10 +2,7 @@ package com.cpa.project.State;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.cpa.project.Camera.TopDownCamera;
@@ -14,9 +11,11 @@ import com.cpa.project.Entities.Actors.Mobs.Skeleton;
 import com.cpa.project.Entities.Actors.Player;
 import com.cpa.project.Entities.Entity;
 import com.cpa.project.Entities.Spells.SonicWave;
+import com.cpa.project.Tiles.Tile;
 import com.cpa.project.Utils.AssetManager;
 import com.cpa.project.Utils.CollisionDetector;
 import com.cpa.project.Utils.Pathfinding.GradientGraph;
+import com.cpa.project.Utils.Pathfinding.Location;
 import com.cpa.project.Utils.PoolManager;
 import com.cpa.project.Utils.SonicWaveProps;
 import com.cpa.project.World.GameMap;
@@ -24,10 +23,10 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Timer;
 
 
-
 import java.util.*;
 
 public class PlayState {
+    private final boolean PATH_FINDING_DEBUG = false;
     public static TopDownCamera topDownCamera;
     public static Player player;
 
@@ -90,10 +89,15 @@ public class PlayState {
 
         float enemyX = player.getPosition().x + distance * MathUtils.cos(angle);
         float enemyY = player.getPosition().y + distance * MathUtils.sin(angle);
-
+        Vector2 tileXY = map.getTilePosition(new Vector2(enemyX, enemyY), AssetManager.getSkeletonTexture().getHeight());
+        if (this.gradientGraph.getGraph()[(int) tileXY.x][(int) tileXY.y] == null) {
+            return;
+        }
         Entity enemy = chooseEnemyTypeBasedOnPlayerLevel(player.getLevel(), enemyX, enemyY);
+
+        enemy.resetSpeed();
         Vector2 entityTileXY = map.getEntityTileXY(enemy);
-        Vector2 velocity = gradientGraph.getDirection((int) entityTileXY.x, (int) entityTileXY.y);
+        Vector2 velocity = gradientGraph.getDirection((int) entityTileXY.x - 1, (int) entityTileXY.y - 1); // we get the direction of the player from the gradient graph
         enemy.setVelocity(velocity);
         enemies.add(enemy);
     }
@@ -125,8 +129,7 @@ public class PlayState {
             Bat.setPosition(new Vector2(x, y));
             Bat.setHealth(Bat.getMaxHealth());
             return Bat;
-        }
-        else {
+        } else {
             // if we add more enemies, we can add more cases here
             // Randomly choose between Skeleton and Bat
             int random = MathUtils.random(0, 1);
@@ -142,16 +145,16 @@ public class PlayState {
     }
 
 
-
     public void update(float dt) {
         topDownCamera.update(dt);
         player.update(dt);
         spawnTimer -= dt;
-        if (spawnTimer < 0){
+        if (spawnTimer < 0) {
             spawnEnemyAroundPlayer();
             spawnTimer = spawnInterval;
         }
         this.gradientGraph.compute();
+
         for (Entity entity : playerProjectiles) {
             // if projectile are at a certain distance from the player , remove them
             if (entity.getPosition().dst(player.getPosition()) > 2000) {
@@ -163,20 +166,25 @@ public class PlayState {
             entity.update(dt);
         }
         for (Entity entity : enemies) {
-//            entity.handleSound(player.getPosition());
+            entity.handleSound(player.getPosition());
             if (entity.getPosition().sub(player.getPosition()).len() > SonicWave.MAX_DISTANCE_AWAY) {
                 affectedBySonicWave.remove(entity);
                 entity.resetSpeed();
             }
+            Vector2 entityTileXY = map.getEntityTileXY(entity);
+            Vector2 velocity = gradientGraph.getDirection((int) entityTileXY.x - 1, (int) entityTileXY.y - 1); // we get the direction of the player from the gradient graph
+            entity.setVelocity(velocity);
             if (affectedBySonicWave.get(entity) != null) {
                 SonicWaveProps props = affectedBySonicWave.get(entity);
                 entity.setVelocity(props.getDirection());
                 entity.setSpeed(props.getSpeed());
-
-            } else {
-                Vector2 entityTileXY = map.getEntityTileXY(entity);
-                Vector2 velocity = gradientGraph.getDirection((int) entityTileXY.x, (int) entityTileXY.y); // we get the direction of the player from the gradient graph
-                entity.setVelocity(velocity);
+            }
+            // if the enemy is at a certain distance from the player
+            // move them towards the player diagonally
+            else if (entity.getPosition().dst(player.getPosition()) < 200) {
+//                System.out.println("triggered");
+                Vector2 direction = player.getPosition().sub(entity.getPosition()).nor();
+                entity.setVelocity(direction);
             }
             entity.update(dt);
             if (CollisionDetector.checkCollision(player, entity)) {
@@ -194,8 +202,7 @@ public class PlayState {
                 PoolManager.freeSkeleton((Skeleton) entity);
             } else if (entity instanceof FlyingBat) {
                 PoolManager.freeBat((FlyingBat) entity);
-            }
-            else {
+            } else {
 //                entity.dispose(); // dispose the other entities ( player projectiles )
                 // i removed this because we are now using an asset manager to dispose the textures and handle them
                 // if you uncomment the entity.dispose() and try using the fireball spell, it will be good first time
@@ -207,7 +214,6 @@ public class PlayState {
     }
 
     public void render(SpriteBatch batch) {
-
         batch.setProjectionMatrix(topDownCamera.combined);
         batch.begin();
         map.render();
@@ -221,8 +227,43 @@ public class PlayState {
         for (Entity entity : enemies) {
             entity.getSprite().draw(batch);
         }
-
-
+        if (PATH_FINDING_DEBUG){
+            Location[][] graph = this.gradientGraph.getGraph();
+            BitmapFont font = AssetManager.getFont();
+            Tile[][] tiles = map.getTiles();
+            for (int i = 0; i < tiles.length; i++) {
+                for (int j = 0; j < tiles[0].length; j++) {
+                    if (graph[i][j] != null) {
+                        font.draw(batch, String.valueOf(graph[i][j].getCost()), i * 48, j * 48 - 5);
+                        Vector2 direction = graph[i][j].getDirection();
+                        if (Objects.equals(direction, new Vector2(1, 0))){
+                            font.draw(batch, ">", i * 48, j * 48);
+                        }
+                        else if (Objects.equals(direction, new Vector2(-1, 0))){
+                            font.draw(batch, "<", i * 48, j * 48);
+                        }
+                        else if (Objects.equals(direction, new Vector2(0, 1))){
+                            font.draw(batch, "^", i * 48, j * 48);
+                        }
+                        else if (Objects.equals(direction, new Vector2(0, -1))){
+                            font.draw(batch, "v", i * 48, j * 48);
+                        }
+                        else if (Objects.equals(direction, new Vector2(1,1).nor())){
+                            font.draw(batch, "|>", i * 48, j * 48);
+                        }
+                        else if (Objects.equals(direction, new Vector2(-1,1).nor())){
+                            font.draw(batch, "<|", i * 48, j * 48);
+                        }
+                        else if (Objects.equals(direction, new Vector2(1,-1).nor())){
+                            font.draw(batch, "|>", i * 48, j * 48);
+                        }
+                        else if (Objects.equals(direction, new Vector2(-1,-1).nor())) {
+                            font.draw(batch, "<|", i * 48, j * 48);
+                        }
+                    }
+                }
+            }
+        }
         // UI Elements need to be drawn at the end so that they are on top of everything
 
         // TODO: Figure out a way to make these UI elements using Scene2D

@@ -37,21 +37,6 @@ public class FlyingBat extends Entity {
 
     protected final float TimeFrame = 0.25f;
 
-
-    public FlyingBat(Vector2 position, Sprite sprite, float speed, float damage, float health ) {
-        super(position, sprite, speed, damage);
-        this.health = health;
-        this.maxHealth = health;
-        this.entityType = EntityType.ENEMY;
-
-        this.lastState = State.WALKING;
-        this.lastDirection = Direction.RIGHT;
-
-        this.animationHandler = new AnimationHandler();
-
-        initAnimations();
-    }
-
     public FlyingBat(){
         super(new Vector2(0,0) , new Sprite(AssetManager.getSkeletonTexture()));
         this.speed = 100;
@@ -68,6 +53,19 @@ public class FlyingBat extends Entity {
         this.animationHandler = new AnimationHandler();
         initAnimations();
 
+    }
+    public FlyingBat(Vector2 position, Sprite sprite, float speed, float damage, float health ) {
+        super(position, sprite, speed, damage);
+        this.health = health;
+        this.maxHealth = health;
+        this.entityType = EntityType.ENEMY;
+        this.default_speed = speed;
+        this.lastState = State.WALKING;
+        this.lastDirection = Direction.RIGHT;
+
+        this.animationHandler = new AnimationHandler();
+
+        initAnimations();
     }
 
     public FlyingBat(Vector2 position, Sprite sprite ) {

@@ -13,12 +13,6 @@ public class Skeleton extends Entity {
     public float timeToNextPath = 0;
 
     private String soundName ;
-    public Skeleton(Vector2 position, Sprite sprite, float speed, float damage, float health ) {
-        super(position, sprite, speed, damage);
-        this.health = health;
-        this.maxHealth = health;
-        this.entityType = EntityType.ENEMY;
-    }
 
     public Skeleton(){
         super(new Vector2(0,0));
@@ -31,6 +25,14 @@ public class Skeleton extends Entity {
         this.entityType = EntityType.ENEMY;
         this.velocity = new Vector2(0, 0);
     }
+    public Skeleton(Vector2 position, Sprite sprite, float speed, float damage, float health ) {
+        super(position, sprite, speed, damage);
+        this.health = health;
+        this.maxHealth = health;
+        this.entityType = EntityType.ENEMY;
+    }
+
+
 
     public Skeleton(Vector2 position, Sprite sprite ) {
         super(position, sprite);
