@@ -97,7 +97,7 @@ public class GradientGraph {
                     int newX = i + dir[0];
                     int newY = j + dir[1];
                     if (newX >= 0 && newX < PlayState.map.getWidth() && newY >= 0 && newY < PlayState.map.getHeight()) {
-                        if (graph[newX][newY] != null && graph[newX][newY].getCost() < minCost) {
+                        if (graph[newX][newY] != null && graph[newX][newY].getCost() < minCost && graph[newX][newY].getCost() != Integer.MAX_VALUE) {
                             minCost = graph[newX][newY].getCost();
                             minLocation = graph[newX][newY];
                         }
@@ -120,7 +120,7 @@ public class GradientGraph {
                 if (graph[i][j].getCost() == Integer.MAX_VALUE){
                     continue;
                 }
-                smoothVector(i, j, 10);
+                smoothVector(i, j, 5);
             }
         }
 
@@ -153,6 +153,9 @@ public class GradientGraph {
     }
 
     public void smoothVector(int i, int j, int neighborSize){
+        if (neighborSize == 0) {
+            return;
+        }
         int startX = Math.max(0, i - neighborSize);
         int endX = Math.min(PlayState.map.getWidth(), i + neighborSize);
         int startY = Math.max(0, j - neighborSize);

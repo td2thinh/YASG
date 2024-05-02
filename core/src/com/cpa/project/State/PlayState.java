@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.cpa.project.Camera.TopDownCamera;
 import com.cpa.project.Entities.Actors.Mobs.FlyingBat;
 import com.cpa.project.Entities.Actors.Mobs.Skeleton;
@@ -241,23 +242,31 @@ public class PlayState {
                     if (graph[i][j] != null) {
                         font.draw(batch, String.valueOf(graph[i][j].getCost()), i * 48, j * 48 - 5);
                         Vector2 direction = graph[i][j].getDirection();
-                        if (Objects.equals(direction, new Vector2(1, 0))) {
-                            font.draw(batch, ">", i * 48, j * 48);
-                        } else if (Objects.equals(direction, new Vector2(-1, 0))) {
-                            font.draw(batch, "<", i * 48, j * 48);
-                        } else if (Objects.equals(direction, new Vector2(0, 1))) {
-                            font.draw(batch, "^", i * 48, j * 48);
-                        } else if (Objects.equals(direction, new Vector2(0, -1))) {
-                            font.draw(batch, "v", i * 48, j * 48);
-                        } else if (Objects.equals(direction, new Vector2(1, 1).nor())) {
-                            font.draw(batch, "|>", i * 48, j * 48);
-                        } else if (Objects.equals(direction, new Vector2(-1, 1).nor())) {
-                            font.draw(batch, "<|", i * 48, j * 48);
-                        } else if (Objects.equals(direction, new Vector2(1, -1).nor())) {
-                            font.draw(batch, "|>", i * 48, j * 48);
-                        } else if (Objects.equals(direction, new Vector2(-1, -1).nor())) {
-                            font.draw(batch, "<|", i * 48, j * 48);
-                        }
+//                        if (Objects.equals(direction, new Vector2(1, 0))) {
+//                            font.draw(batch, ">", i * 48, j * 48);
+//                        } else if (Objects.equals(direction, new Vector2(-1, 0))) {
+//                            font.draw(batch, "<", i * 48, j * 48);
+//                        } else if (Objects.equals(direction, new Vector2(0, 1))) {
+//                            font.draw(batch, "^", i * 48, j * 48);
+//                        } else if (Objects.equals(direction, new Vector2(0, -1))) {
+//                            font.draw(batch, "v", i * 48, j * 48);
+//                        } else if (Objects.equals(direction, new Vector2(1, 1).nor())) {
+//                            font.draw(batch, "|>", i * 48, j * 48);
+//                        } else if (Objects.equals(direction, new Vector2(-1, 1).nor())) {
+//                            font.draw(batch, "<|", i * 48, j * 48);
+//                        } else if (Objects.equals(direction, new Vector2(1, -1).nor())) {
+//                            font.draw(batch, "|>", i * 48, j * 48);
+//                        } else if (Objects.equals(direction, new Vector2(-1, -1).nor())) {
+//                            font.draw(batch, "<|", i * 48, j * 48);
+//                        }
+                        Texture arrowTexture = AssetManager.getArrowTexture();
+                        Sprite arrowSprite = new Sprite(arrowTexture);
+
+                        batch.draw(arrowSprite, i * 42 + 25, j * 42,
+                                arrowSprite.getWidth() / 2f, arrowSprite.getHeight() / 2f,
+                                arrowSprite.getWidth(), arrowSprite.getHeight(),
+                                0.025f, 0.025f, direction.angleDeg());
+
                     }
                 }
             }

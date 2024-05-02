@@ -33,6 +33,7 @@ public class AssetManager {
     private final static Texture terrainTiles = new Texture(Gdx.files.internal("terrain.png"));
     private final static Texture treeTexture = new Texture(Gdx.files.internal("map/grassland_trees.png"));
 
+    private final static Texture arrowTexture = new Texture(Gdx.files.internal("arrow.png"));
 
     public static Texture getSonicWave(){ return sonicWave; }
 
@@ -74,6 +75,10 @@ public class AssetManager {
 
     public static Skin getSkin() {
         return skin;
+    }
+
+    public static Texture getArrowTexture() {
+        return arrowTexture;
     }
 
     public static BitmapFont getFont() {
