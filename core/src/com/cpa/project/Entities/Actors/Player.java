@@ -44,10 +44,10 @@ public class Player extends Entity {
 
     // state enum
     protected enum State {
-        IDLE, WALKING , DAMAGED , ATTACKING
+        IDLE, WALKING, DAMAGED, ATTACKING
     }
 
-    protected State lastState ;
+    protected State lastState;
     protected Direction lastDirection;
 
     protected final String IDLE = "Idle";
@@ -112,7 +112,7 @@ public class Player extends Entity {
      * Initialize the animations for the player
      * this loads atlas files and creates animations for the player
      */
-    public void initAnimations(){
+    public void initAnimations() {
         // load the animations
         TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("animations/player/walk_lr.atlas"));
         Animation<TextureRegion> idleAnimation = new Animation<>(TimeFrame, atlas.findRegions("walk_lr"));
@@ -167,7 +167,7 @@ public class Player extends Entity {
         newPosition.add(this.velocity.x * this.speed * dt, this.velocity.y * this.speed * dt);
 
         // Check the tile at the potential new position
-        Tile tile = PlayState.map.getTileAt(newPosition , this.sprite.getRegionHeight());
+        Tile tile = PlayState.map.getTileAt(newPosition, this.sprite.getRegionHeight());
         if (tile != null && tile.isReachable()) {
             // Apply the movement since the tile is reachable
             this.sprite.translate(this.velocity.x * this.speed * dt, this.velocity.y * this.speed * dt);
@@ -179,21 +179,20 @@ public class Player extends Entity {
 
 
         // Determine state based on velocity (IDLE or WALKING ) and also take into account the last state to determine if the player is attacking or damaged
-        State newState ;
+        State newState;
         if (lastState == State.DAMAGED) {
             if (animationHandler.isFinished()) {
                 newState = State.IDLE;
             } else {
                 newState = State.DAMAGED;
             }
-        }else if (lastState == State.ATTACKING) {
+        } else if (lastState == State.ATTACKING) {
             if (animationHandler.isFinished()) {
                 newState = State.IDLE;
             } else {
                 newState = State.ATTACKING;
             }
-        }
-        else if (velocity.isZero()) {
+        } else if (velocity.isZero()) {
             newState = State.IDLE;
         } else {
             newState = State.WALKING;
@@ -213,14 +212,13 @@ public class Player extends Entity {
         if (animationHandler.isCurrent(ATTACK) || animationHandler.isCurrent(DAMAGE)) {
             if (animationHandler.isFinished()) {
                 animationHandler.setCurrent(IDLE, true);
-            }
-            else {
+            } else {
                 return;
             }
         }
 
         // Update the animation only if the state or direction has changed
-        if ((newState != lastState || newDirection != lastDirection )  )  {
+        if ((newState != lastState || newDirection != lastDirection)) {
             switch (newState) {
                 case IDLE:
                     animationHandler.setCurrent(IDLE, true);
@@ -240,7 +238,7 @@ public class Player extends Entity {
                             for (TextureRegion frame : animationHandler.getFrames(WALK)) {
                                 if (!frame.isFlipX()) frame.flip(true, false);
                             }
-                        }else {
+                        } else {
                             for (TextureRegion frame : animationHandler.getFrames(WALK)) {
                                 if (frame.isFlipX()) frame.flip(true, false);
                             }
@@ -318,7 +316,7 @@ public class Player extends Entity {
         // after casting the spell, we set the time to ready to the default cooldown
 
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-            Gdx.app.postRunnable(() -> audioHandler.addSoundEffect("sonicWave" , sonicWaveSound));
+            Gdx.app.postRunnable(() -> audioHandler.addSoundEffect("sonicWave", sonicWaveSound));
             float castTime = this.spells.get("SonicWave").getTimeToReady();
             castTime -= dt;
             if (castTime <= 0) {
@@ -329,7 +327,7 @@ public class Player extends Entity {
 
         }
         if (Gdx.input.isKeyPressed(Input.Keys.H)) {
-            Gdx.app.postRunnable(() -> audioHandler.addSoundEffect("heal" , healSound));
+            Gdx.app.postRunnable(() -> audioHandler.addSoundEffect("heal", healSound));
             float castTime = this.spells.get("Heal").getTimeToReady();
             castTime -= dt;
             if (castTime <= 0) {
@@ -340,7 +338,7 @@ public class Player extends Entity {
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.F)) {
-            Gdx.app.postRunnable(() -> audioHandler.addSoundEffect("fireball" , fireballSound));
+            Gdx.app.postRunnable(() -> audioHandler.addSoundEffect("fireball", fireballSound));
             float castTime = this.spells.get("AutoFireBall").getTimeToReady();
             castTime -= dt;
             if (castTime <= 0) {

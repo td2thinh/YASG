@@ -38,7 +38,6 @@ public class GameMap {
         this.renderer = new OrthogonalTiledMapRenderer(tiledMap);
         this.font = new BitmapFont();
         this.noiseProceduralGen = new NoiseProceduralGen(5, 100, 100);
-
     }
 
     public void init() {

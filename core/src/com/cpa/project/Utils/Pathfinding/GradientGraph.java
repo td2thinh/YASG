@@ -17,15 +17,6 @@ public class GradientGraph {
 
     public GradientGraph() {
         this.graph = new Location[PlayState.map.getWidth()][PlayState.map.getHeight()];
-//        for (int i = 0; i < PlayState.map.getWidth(); i++) {
-//            for (int j = 0; j < PlayState.map.getHeight(); j++) {
-//                if (tiles[i][j].isReachable()) {
-//                    graph[i][j] = new Location(i, j, -1, new Vector2(0, 0));
-//                } else {
-//                    graph[i][j] = new Location(i, j, Integer.MAX_VALUE, new Vector2(0, 0));
-//                }
-//            }
-//        }
     }
 
     // Source: https://www.redblobgames.com/pathfinding/a-star/implementation.html
@@ -33,11 +24,6 @@ public class GradientGraph {
     public void compute() {
         for (int i = 0; i < PlayState.map.getWidth(); i++) {
             for (int j = 0; j < PlayState.map.getHeight(); j++) {
-//                if (tiles[i][j].isReachable()) {
-//                    graph[i][j].setCost(-1);
-//                } else {
-//                    graph[i][j].setCost(Integer.MAX_VALUE);
-//                }
                 graph[i][j] = null;
             }
         }
@@ -52,12 +38,6 @@ public class GradientGraph {
         frontier.add(this.graph[tileX][tileY]);
         while(!frontier.isEmpty() && numTiles < 60 * 60) {
             Location current = frontier.poll();
-//            for (Location next : getNeighbors(current)) {
-//                if (next.getCost() == -1){
-//                    next.setCost(current.getCost() + 1);
-//                    frontier.add(next);
-//                }
-//            }
             for (int[] dir : directionsInt) {
                 int newX = current.getX() + dir[0];
                 int newY = current.getY() + dir[1];
@@ -87,12 +67,6 @@ public class GradientGraph {
                 int minCost = Integer.MAX_VALUE;
                 Location minLocation = null;
                 Vector2 pos = new Vector2(i, j);
-//                for (Location neighbor : getNeighbors(graph[i][j])) {
-//                    if (neighbor.getCost() < minCost) {
-//                        minCost = neighbor.getCost();
-//                        minLocation = neighbor;
-//                    }
-//                }
                 for (int[] dir : directionsInt) {
                     int newX = i + dir[0];
                     int newY = j + dir[1];
@@ -127,27 +101,11 @@ public class GradientGraph {
 
         frontier = null;
     }
-
     public Vector2 getDirection(int x, int y) {
         return (x <= graph.length && y <= graph[0].length && graph[x][y] != null)
                 ? graph[x][y].getDirection()
                 : new Vector2(0, 0);
     }
-
-    public List<Location> getNeighbors(Location tile) {
-        List<Location> neighbors = new ArrayList<>();
-        int x = tile.getX();
-        int y = tile.getY();
-        for (int[] dir : directionsInt) {
-            int newX = x + dir[0];
-            int newY = y + dir[1];
-            if (newX >= 0 && newX < PlayState.map.getWidth() && newY >= 0 && newY < PlayState.map.getHeight()) {
-                neighbors.add(graph[newX][newY]);
-            }
-        }
-        return neighbors;
-    }
-
     public Location[][] getGraph() {
         return this.graph;
     }

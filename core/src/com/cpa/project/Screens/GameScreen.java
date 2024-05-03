@@ -235,6 +235,5 @@ public class GameScreen implements Screen {
         gameStage.dispose();
         batch.dispose();
         playState = null;
-//        VisUI.dispose();
     }
 }

@@ -10,9 +10,6 @@ import com.cpa.project.Utils.AssetManager;
 import static com.cpa.project.Survivors.audioHandler;
 
 public class Skeleton extends Entity {
-
-    public float timeToNextPath = 0;
-
     private String soundName ;
 
     public Skeleton(){
